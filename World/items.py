@@ -1,80 +1,13 @@
-from BaseClasses import Item
+import random
+from typing import TypeVar, Any
+
+from BaseClasses import Item, ItemClassification
 
 
 class SableItem(Item):
     game = "Sable"
 
-fish = [
-    "ScabbyFish",
-    "BellowGuppy",
-    "DopeyDart",
-    "PebbleEye",
-    "BloatedEyeClam",
-    "FlutterThrust",
-    "ShelledCup",
-    "Hummer",
-    "SuckerFish",
-    "TrifleJelly",
-    "LittleKicker",
-    "PillFish",
-    "StormFish",
-    "TeacupAngler",
-    "LightKoi",
-    "SandRay",
-    "GhostSoul"
-]
-fish_clues = [
-    "ScabbyFishClue",
-    "BellowGuppyClue",
-    "DopeyDartClue",
-    "PebbleEyeClue",
-    "BloatedEyeClamClue",
-    "FlutterThrustClue",
-    "ShelledCupClue",
-    "HummerClue",
-    "SuckerFishClue",
-    "TrifleJellyClue",
-    "LittleKickerClue",
-    "PillFishClue",
-    "StormFishClue",
-    "TeacupAnglerClue",
-    "LightKoiClue",
-    "SandRayClue",
-    "GhostSoulClue"
-]
-
-insects = [
-    "ChalkButterfly",
-    "CrystalButterfly",
-    "DuskFirefly",
-    "Glowworm",
-    "NimoorButterflies",
-    "OasisDragonfly",
-    "OrangeWingBeetle",
-    "SaltButterfly",
-    "ShadedLeafButterfly",
-    "StepwellDragonfly",
-    "SunshineButterfly",
-    "YellowElephantBeetle"
-]
-
-filler_items = [ # Some of these are quest items, but generally unimportant
-    "FallowPomegranate",
-    "Fig",
-    "GlowingMushrooms",
-    "LarvalHusk",
-    "LarvalHuskPackage",
-    "LightningCrystal",
-    "MelancholyMushroom",
-    "OasisFlower",
-    "PinkNeckEggs",
-    "PricklyPear",
-    "ScrapMetal",
-    "ShyRijwurPulp",
-    "SlicerBeetlePoo",
-    "ThievingMagpiesWellDoorKey",
-]
-
+# Non Randomized Items #
 unused_items = [
     "SableHunchTrousers"
     "MonumentalBikeBoosterSchematic",
@@ -113,19 +46,90 @@ prologue_items = [
     "PowerSupply",
 ]
 
-item_id_to_name: dict[int, str] = {
-    # Badges
-    4001: "AnglerBadge",
-    4002: "BeetleBadge",
-    4003: "CartographersBadge",
-    4004: "ClimbingBadge",
-    4005: "EntertainersBadge",
-    4006: "GuardsBadge",
-    4007: "MachinistBadge",
-    4008: "MerchantBadge",
-    4009: "ScrappersBadge",
+# Randomized Items #
+random_shit = { # Some of these are quest items, but generally unimportant
+    4901: "FallowPomegranate",
+    4902: "Fig",
+    4903: "GlowingMushrooms",
+    4904: "LarvalHusk",
+    4905: "LarvalHuskPackage",
+    4906: "LightningCrystal",
+    4907: "MelancholyMushroom",
+    4908: "OasisFlower",
+    4909: "PinkNeckEggs",
+    4910: "PricklyPear",
+    4911: "ScrapMetal",
+    4912: "ShyRijwurPulp",
+    4913: "SlicerBeetlePoo",
+    4914: "ThievingMagpiesWellDoorKey",
+}
+insects = {
+    4921: "ChalkButterfly",
+    4922: "CrystalButterfly",
+    4923: "DuskFirefly",
+    4924: "Glowworm",
+    4925: "NimoorButterflies",
+    4926: "OasisDragonfly",
+    4927: "OrangeWingBeetle",
+    4928: "SaltButterfly",
+    4929: "ShadedLeafButterfly",
+    4930: "StepwellDragonfly",
+    4931: "SunshineButterfly",
+    4932: "YellowElephantBeetle"
+}
+fish = {
+    4941: "ScabbyFish",
+    4942: "BellowGuppy",
+    4943: "DopeyDart",
+    4944: "PebbleEye",
+    4945: "BloatedEyeClam",
+    4946: "FlutterThrust",
+    4947: "ShelledCup",
+    4948: "Hummer",
+    4949: "SuckerFish",
+    4950: "TrifleJelly",
+    4951: "LittleKicker",
+    4952: "PillFish",
+    4953: "StormFish",
+    4954: "TeacupAngler",
+    4955: "LightKoi",
+    4956: "SandRay",
+    4957: "GhostSoul"
+}
+atomic_heart_clues = {
+    4961: "AtomicHeartDebtNote",  # 'CLUE: Promissory Note',
+    4962: "AtomicHeartEmptySocket",  # 'CLUE: Empty Socket',
+    4963: "AtomicHeartFeather",  # 'CLUE: Large Feathers',
+    4964: "AtomicHeartSmashedGlass",  # 'CLUE: Smashed Glass',
+    4965: "AtomicHeartSuspectGaray",  # 'SUSPECT: Climber Garay',
+    4966: "AtomicHeartSuspectHamza",  # 'SUSPECT: Machinist Hamza',
+    4967: "AtomicHeartSuspectIria",  # 'SUSPECT: Merchant Iria',
+}
+fish_clues = {
+    4971: "ScabbyFishClue",
+    4972: "BellowGuppyClue",
+    4973: "DopeyDartClue",
+    4974: "PebbleEyeClue",
+    4975: "BloatedEyeClamClue",
+    4976: "FlutterThrustClue",
+    4977: "ShelledCupClue",
+    4978: "HummerClue",
+    4979: "SuckerFishClue",
+    4980: "TrifleJellyClue",
+    4981: "LittleKickerClue",
+    4982: "PillFishClue",
+    4983: "StormFishClue",
+    4984: "TeacupAnglerClue",
+    4985: "LightKoiClue",
+    4986: "SandRayClue",
+    4987: "GhostSoulClue"
+}
 
+
+
+bike_parts = {
     # Bike Parts
+    # Reserved Id's: 4101-4199
     4101: "AnglerBikeBooster",
     4102: "AnglerBikeFront",
     4103: "AnglerBikeWings",
@@ -177,9 +181,12 @@ item_id_to_name: dict[int, str] = {
     4149: "SpeedsterBikeBooster",
     4150: "SpeedsterBikeFront",
     4151: "SpeedsterBikeWings",
+}
 
+bike_palettes = {
     # Palettes
-    4400: "AtomicCorePalette",
+    # Reserved Id's: 4401-4499
+    4401: "AtomicCorePalette",
     4402: "AtomicShellPalette",
     4403: "AtomicWhaleShipBikePalette",
     4404: "AzurePalette",
@@ -214,25 +221,11 @@ item_id_to_name: dict[int, str] = {
     4433: "SunsetsPalette",
     4434: "WashBluePalette",
     4435: "WindChimePalette",
+}
 
-    # Masks
-    4201: "AtomicSuitHelmet",
-    4202: "CartographersMask",
-    4203: "ChumMask",
-    4204: "ClimbingSetMask",
-    4205: "EngineerSetHelmet",
-    4206: "EntertainersMask",
-    4207: "FishingSetMask",
-    4208: "GuardMask",
-    4209: "HerculesBeetleMask",
-    4210: "IbexiiSetMask",
-    4211: "MerchantsMask",
-    4212: "SandwormMask",
-    4213: "ScrappersMask",
-    4214: "ShadeOfEccriaMask",
-
-
+clothes = {
     # Clothes
+    # Reserved Id's: 4251-4299
     4251: "AtomicPriesthoodSetTop",
     4252: "AtomicPriesthoodSetTrousers",
     4253: "AtomicSuitTop",
@@ -271,8 +264,44 @@ item_id_to_name: dict[int, str] = {
     4286: "SurferSetTrousers",
     4287: "WhiteDesertSetTop",
     4288: "WhiteDesertSetTrousers",
+}
 
+badges = {
+    # Badges
+    # Reserved Id's: 4001-4049
+    4001: "AnglerBadge",
+    4002: "BeetleBadge",
+    4003: "CartographersBadge",
+    4004: "ClimbingBadge",
+    4005: "EntertainersBadge",
+    4006: "GuardsBadge",
+    4007: "MachinistBadge",
+    4008: "MerchantBadge",
+    4009: "ScrappersBadge",
+}
+
+masks = {
+    # Masks
+    # Reserved Id's: 4201-4249
+    4201: "AtomicSuitHelmet",
+    4202: "CartographersMask",
+    4203: "ChumMask",
+    4204: "ClimbingSetMask",
+    4205: "EngineerSetHelmet",
+    4206: "EntertainersMask",
+    4207: "FishingSetMask",
+    4208: "GuardMask",
+    4209: "HerculesBeetleMask",
+    4210: "IbexiiSetMask",
+    4211: "MerchantsMask",
+    4212: "SandwormMask",
+    4213: "ScrappersMask",
+    4214: "ShadeOfEccriaMask",
+}
+
+maps = {
     # Maps
+    # Reserved Id's: 4301-4349
     4301: "BadlandsMap",
     4302: "BlackDesertMap",
     4303: "CatEarCanyonMap",
@@ -280,31 +309,39 @@ item_id_to_name: dict[int, str] = {
     4305: "SaltPlainsMap",
     4306: "WesternDuneMap",
     4307: "WhiteDesertMap",
+}
 
+key_items = {
     # Key Items
+    # Reserved Id's: 4351-4399
     4351: "Compass",
     4352: "GlidingStone01",
     4353: "GlidingStone02",
     4354: "Navigator",
-    4355: "AnAncientRaceKeyItem", # There should be 6 in the pool
+    4355: "AnAncientRaceKeyItem",  # There should be 6 in the pool
     4356: "BasicFishingRod",
     4357: "TricksterAtomicRod",
-    4358: "Chum", # There should be 165 in the pool
-    4359: "ChumTear", # There should be 6 in the pool
+    4358: "Chum",  # There should be 165 in the pool
+    4359: "ChumTear",  # There should be 6 in the pool
 
     # Atomic Heart Quest Items,
-    4360: "AtomicHeartKeycard",           # 'Atomic Heart Keycard',
-    4361: "AtomicHeartPowerCoreBroken",   # 'Broken Atomic Heart Powercore',
-    4362: "AtomicHeartPowerCoreRepaired", # 'Repaired Atomic Heart Powercore',
-    4363: "AtomicHeartDebtNote",          # 'CLUE: Promissory Note',
-    4364: "AtomicHeartEmptySocket",       # 'CLUE: Empty Socket',
-    4365: "AtomicHeartFeather",           # 'CLUE: Large Feathers',
-    4366: "AtomicHeartSmashedGlass",      # 'CLUE: Smashed Glass',
-    4367: "AtomicHeartSuspectGaray",      # 'SUSPECT: Climber Garay',
-    4368: "AtomicHeartSuspectHamza",      # 'SUSPECT: Machinist Hamza',
-    4369: "AtomicHeartSuspectIria",       # 'SUSPECT: Merchant Iria',
+    4360: "AtomicHeartKeycard",  # 'Atomic Heart Keycard',
+    4361: "AtomicHeartPowerCoreBroken",  # 'Broken Atomic Heart Powercore',
+    4362: "AtomicHeartPowerCoreRepaired",  # 'Repaired Atomic Heart Powercore',
 }
 
+def get_classification(item_id: int) -> ItemClassification:
+    if item_id in key_items | badges:
+        return ItemClassification.progression
+    if item_id in maps | bike_parts:
+        return ItemClassification.useful
+    return ItemClassification.filler
+
+T = TypeVar("T")
+K = TypeVar("K")
+L = TypeVar("L")
+def transitive_dict(dict1: dict[K, T], dict2: dict[T, L]) -> dict[K, L]:
+    return {k: dict2[v] for k, v in dict1.items()}
 ingame_name_to_display: dict[str, str] = {
     'AnAncientRaceKeyItem': 'Hicaric Ring Artefact',
     'AnglerBadge': 'Angler Badge',
@@ -569,6 +606,23 @@ ingame_name_to_display: dict[str, str] = {
     'WindChimePalette': 'Wind Chime Dye',
     'YellowElephantBeetle': 'Yellow Elephant Beetle'
 }
+
+filler = random_shit | insects | fish # Filler items can be collected multiple times
+item_id_to_name: dict[int, str] = transitive_dict(key_items | maps | badges | clothes | bike_palettes | bike_parts | filler| atomic_heart_clues | fish_clues, ingame_name_to_display)
+
+item_name_to_id: dict[str, int] = {v: k for k, v in item_id_to_name.items()}
+
+item_name_groups = {
+    "masks": set([v for k, v in transitive_dict(masks, ingame_name_to_display).items()]),
+    "badges": set([v for k, v in transitive_dict(badges, ingame_name_to_display).items()]),
+    "bike_parts": set([v for k, v in transitive_dict(bike_parts, ingame_name_to_display).items()]),
+    "maps": set([v for k, v in transitive_dict(maps, ingame_name_to_display).items()]),
+}
+
+def get_random_filler() -> str:
+    id = random.choice(filler)
+    return item_id_to_name[id]
+
 
 if __name__ == "__main__":
     print("\""+"\", \n\"".join(filter(lambda x: x not in item_id_to_name.values(), all_items))+"\"")

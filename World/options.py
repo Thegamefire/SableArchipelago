@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, Choice, DeathLink
+from Options import PerGameCommonOptions, Choice, DeathLink, Toggle
 
 
 class Goal(Choice):
@@ -17,10 +17,14 @@ class DeathLinkMode(Choice):
     empty_stamina: Makes you exhausted.
     fasttravel_last_location: Teleports you to the last named location you visited.
     """
-    display_naem = "DeathLinkMode"
+    display_name = "DeathLinkMode"
     option_stamina = 0
     option_fasttravel = 1
     default = 1
+
+class RandomizeFish(Toggle):
+    """Adds Fish to the randomizer"""
+    display_name = "Randomize Fish"
 
 @dataclass
 class SableOptions(PerGameCommonOptions):
