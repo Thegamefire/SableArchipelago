@@ -10,6 +10,7 @@ using BepInEx.Unity.IL2CPP;
 using CollectiblesBehaviour;
 using HarmonyLib;
 using Items;
+using UI.HUD;
 using UI.HUD.Notifications;
 using UI.HUD.Notifications.NotificationTypes;
 using UnityEngine;
@@ -94,39 +95,59 @@ public class Plugin : BasePlugin
         ReceivedItemsQueue.Enqueue(itemName);
         Log.LogMessage($"Added Item To Queue: {itemName} | Quecount is {ReceivedItemsQueue.Count}");
     }
-    
+
+    public static bool IsReceivingItem()
+    {
+        return Plugin.ReceivingItem;
+    }
 
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.Add), new [] { typeof(Items.Item), typeof(int) })]
     static class InventoryAddPatch
     {
         static bool Prefix(PlayerInventory __instance, Items.Item item, Int32 quantity)
-        {
-            Log.LogMessage($"Added Item: {item.ItemDef.Name}, {quantity} | Map: {item.ItemDef.Name.Contains("Map")}");
-            if (Plugin.ReceivingItem)
+        { // Received Items are still seen as checks and not given
+            Log.LogMessage($"Item received: from archipelago? {Plugin.IsReceivingItem()}");
+            if (Plugin.IsReceivingItem())
             {
                 Plugin.ReceivingItem = false;
+                Log.LogMessage($"Received Item: {item.itemDef.Name}");
                 return true;
             }
             if (Plugin.SableInventory == null) {
                 Plugin.SableInventory = __instance;
             }
-            
 
-            return true;
+            if (item.ItemDef.Name == "Chum")
+            {
+                return false;
+            }
+            Plugin.Client.SendLocation(item.itemDef.Name_EN);
+
+            return false;
         }
     }
 
     [HarmonyPatch(typeof(ChumBehaviour), nameof(ChumBehaviour.Use))]
     static class OnChumUse
     {
-        static bool Prefix(ChumBehaviour __instance)
+        static void Prefix(ChumBehaviour __instance)
         {
             Client.SendChum(__instance);
-            
-            return false;
         }
     }
-    
+
+    // [HarmonyPatch(typeof(ChumBehaviour), nameof(ChumBehaviour.SendMessage))]
+    // static class BlockChumMessage
+    // {
+    //     static bool Prefix(ChumBehaviour __instance)
+    //     {
+    //         Log.LogMessage("Blocking Send Chum Message");
+    //         __instance.EndTimeline(); // This only unlocks the camera, not the player
+    //
+    //         return false;
+    //     }
+    // }
+
 
     [HarmonyPatch(typeof(SableCharacterController), nameof(SableCharacterController.Update))]
     static class OnFrame
@@ -146,6 +167,7 @@ public class Plugin : BasePlugin
                 foreach (PlayerInventory inventory in
                          inventories) // the 2nd seems to be the correct one for some reason
                 {
+                    Plugin.ReceivingItem = true;
                     inventory.Add(ItemDB.GetItemFromName(itemName), 1);
                 }
             }
@@ -155,16 +177,7 @@ public class Plugin : BasePlugin
                 if (__instance.Exhausted)
                 {
                     Client.SendDeath();
-                    var inventories = Resources.FindObjectsOfTypeAll<PlayerInventory>();
-                    Log.LogMessage($"Inventories found: {inventories.Length}");
-                    foreach (PlayerInventory inventory in inventories) // the 2nd seems to be the correct one for some reason
-                    {
-                            Log.LogWarning($"Money: {inventory.moneyHeld}");
-                    }
-                    
-
                 }
-
                 SableWasExhausted = __instance.Exhausted;
             }
         }

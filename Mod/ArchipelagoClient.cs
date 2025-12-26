@@ -16,6 +16,8 @@ public class ArchipelagoClient
     private ArchipelagoSession _session;
     public Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
     public int LastHandledItemIndex;
+    public int HicaricRingLocationsChecked;
+    public int ChumTearLocationsChecked;
 
     public ArchipelagoClient()
     {
@@ -99,7 +101,18 @@ public class ArchipelagoClient
 
     public void SendLocation(string locationName)
     {
+        if (locationName == "Hicaric Ring Artefact")
+        {
+            locationName = $"Hicaric Ring {this.HicaricRingLocationsChecked + 1}";
+            HicaricRingLocationsChecked += 1;
+        } else if (locationName == "Chum Queen Tear")
+        {
+            locationName = $"Chum Tear {this.ChumTearLocationsChecked + 1}";
+            HicaricRingLocationsChecked += 1;
+        }
+
         Plugin.Log.LogMessage($"Sending Location: {locationName}");
+        _session.Locations.CompleteLocationChecks(_session.Locations.GetLocationIdFromName("Sable", locationName));
     }
 
     public void SendChum(ChumBehaviour chum)
