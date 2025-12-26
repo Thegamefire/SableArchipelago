@@ -9,8 +9,8 @@ class Goal(Choice):
     """
     display_name = "Goal"
     option_gliding = 0
-    option_all_masks = 0
-    default = 0
+    option_all_masks = 1
+    default = 1
 
 class DeathLinkMode(Choice):
     """What to do when a deathlink is received
@@ -22,11 +22,12 @@ class DeathLinkMode(Choice):
     option_fasttravel = 1
     default = 1
 
-class RandomizeFish(Toggle):
-    """Adds Fish to the randomizer"""
-    display_name = "Randomize Fish"
+# class RandomizeFish(Toggle):
+#     """Adds Fish to the randomizer"""
+#     display_name = "Randomize Fish"
 
 @dataclass
 class SableOptions(PerGameCommonOptions):
+    goal: Goal
     death_link: DeathLink
     death_link_mode: DeathLinkMode

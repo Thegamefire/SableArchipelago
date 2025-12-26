@@ -47,82 +47,84 @@ prologue_items = [
 ]
 
 # Randomized Items #
+# Keep Id's 4800-5000 free for Locations of duplicate items (Locations take the same id's as the items)
+
 random_shit = { # Some of these are quest items, but generally unimportant
-    4901: "FallowPomegranate",
-    4902: "Fig",
-    4903: "GlowingMushrooms",
-    4904: "LarvalHusk",
-    4905: "LarvalHuskPackage",
-    4906: "LightningCrystal",
-    4907: "MelancholyMushroom",
-    4908: "OasisFlower",
-    4909: "PinkNeckEggs",
-    4910: "PricklyPear",
-    4911: "ScrapMetal",
-    4912: "ShyRijwurPulp",
-    4913: "SlicerBeetlePoo",
-    4914: "ThievingMagpiesWellDoorKey",
+    4701: "FallowPomegranate",
+    4702: "Fig",
+    4703: "GlowingMushrooms",
+    4704: "LarvalHusk",
+    4705: "LarvalHuskPackage",
+    4706: "LightningCrystal",
+    4707: "MelancholyMushroom",
+    4708: "OasisFlower",
+    4709: "PinkNeckEggs",
+    4710: "PricklyPear",
+    4711: "ScrapMetal",
+    4712: "ShyRijwurPulp",
+    4713: "SlicerBeetlePoo",
+    4714: "ThievingMagpiesWellDoorKey",
 }
 insects = {
-    4921: "ChalkButterfly",
-    4922: "CrystalButterfly",
-    4923: "DuskFirefly",
-    4924: "Glowworm",
-    4925: "NimoorButterflies",
-    4926: "OasisDragonfly",
-    4927: "OrangeWingBeetle",
-    4928: "SaltButterfly",
-    4929: "ShadedLeafButterfly",
-    4930: "StepwellDragonfly",
-    4931: "SunshineButterfly",
-    4932: "YellowElephantBeetle"
+    4721: "ChalkButterfly",
+    4722: "CrystalButterfly",
+    4723: "DuskFirefly",
+    4724: "Glowworm",
+    4725: "NimoorButterflies",
+    4726: "OasisDragonfly",
+    4727: "OrangeWingBeetle",
+    4728: "SaltButterfly",
+    4729: "ShadedLeafButterfly",
+    4730: "StepwellDragonfly",
+    4731: "SunshineButterfly",
+    4732: "YellowElephantBeetle"
 }
 fish = {
-    4941: "ScabbyFish",
-    4942: "BellowGuppy",
-    4943: "DopeyDart",
-    4944: "PebbleEye",
-    4945: "BloatedEyeClam",
-    4946: "FlutterThrust",
-    4947: "ShelledCup",
-    4948: "Hummer",
-    4949: "SuckerFish",
-    4950: "TrifleJelly",
-    4951: "LittleKicker",
-    4952: "PillFish",
-    4953: "StormFish",
-    4954: "TeacupAngler",
-    4955: "LightKoi",
-    4956: "SandRay",
-    4957: "GhostSoul"
+    4741: "ScabbyFish",
+    4742: "BellowGuppy",
+    4743: "DopeyDart",
+    4744: "PebbleEye",
+    4745: "BloatedEyeClam",
+    4746: "FlutterThrust",
+    4747: "ShelledCup",
+    4748: "Hummer",
+    4749: "SuckerFish",
+    4750: "TrifleJelly",
+    4751: "LittleKicker",
+    4752: "PillFish",
+    4753: "StormFish",
+    4754: "TeacupAngler",
+    4755: "LightKoi",
+    4756: "SandRay",
+    4757: "GhostSoul"
 }
 atomic_heart_clues = {
-    4961: "AtomicHeartDebtNote",  # 'CLUE: Promissory Note',
-    4962: "AtomicHeartEmptySocket",  # 'CLUE: Empty Socket',
-    4963: "AtomicHeartFeather",  # 'CLUE: Large Feathers',
-    4964: "AtomicHeartSmashedGlass",  # 'CLUE: Smashed Glass',
-    4965: "AtomicHeartSuspectGaray",  # 'SUSPECT: Climber Garay',
-    4966: "AtomicHeartSuspectHamza",  # 'SUSPECT: Machinist Hamza',
-    4967: "AtomicHeartSuspectIria",  # 'SUSPECT: Merchant Iria',
+    4761: "AtomicHeartDebtNote",  # 'CLUE: Promissory Note',
+    4762: "AtomicHeartEmptySocket",  # 'CLUE: Empty Socket',
+    4763: "AtomicHeartFeather",  # 'CLUE: Large Feathers',
+    4764: "AtomicHeartSmashedGlass",  # 'CLUE: Smashed Glass',
+    4765: "AtomicHeartSuspectGaray",  # 'SUSPECT: Climber Garay',
+    4766: "AtomicHeartSuspectHamza",  # 'SUSPECT: Machinist Hamza',
+    4767: "AtomicHeartSuspectIria",  # 'SUSPECT: Merchant Iria',
 }
 fish_clues = {
-    4971: "ScabbyFishClue",
-    4972: "BellowGuppyClue",
-    4973: "DopeyDartClue",
-    4974: "PebbleEyeClue",
-    4975: "BloatedEyeClamClue",
-    4976: "FlutterThrustClue",
-    4977: "ShelledCupClue",
-    4978: "HummerClue",
-    4979: "SuckerFishClue",
-    4980: "TrifleJellyClue",
-    4981: "LittleKickerClue",
-    4982: "PillFishClue",
-    4983: "StormFishClue",
-    4984: "TeacupAnglerClue",
-    4985: "LightKoiClue",
-    4986: "SandRayClue",
-    4987: "GhostSoulClue"
+    4771: "ScabbyFishClue",
+    4772: "BellowGuppyClue",
+    4773: "DopeyDartClue",
+    4774: "PebbleEyeClue",
+    4775: "BloatedEyeClamClue",
+    4776: "FlutterThrustClue",
+    4777: "ShelledCupClue",
+    4778: "HummerClue",
+    4779: "SuckerFishClue",
+    4780: "TrifleJellyClue",
+    4781: "LittleKickerClue",
+    4782: "PillFishClue",
+    4783: "StormFishClue",
+    4784: "TeacupAnglerClue",
+    4785: "LightKoiClue",
+    4786: "SandRayClue",
+    4787: "GhostSoulClue"
 }
 
 
@@ -619,10 +621,10 @@ item_name_groups = {
     "maps": set([v for k, v in transitive_dict(maps, ingame_name_to_display).items()]),
 }
 
+filler_names = {v for _, v in transitive_dict(filler, ingame_name_to_display).items()}
+
 def get_random_filler() -> str:
-    id = random.choice(filler)
+    id = random.choice(list(filler.keys()))
     return item_id_to_name[id]
 
 
-if __name__ == "__main__":
-    print("\""+"\", \n\"".join(filter(lambda x: x not in item_id_to_name.values(), all_items))+"\"")
