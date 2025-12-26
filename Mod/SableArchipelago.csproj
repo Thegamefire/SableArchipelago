@@ -13,6 +13,7 @@
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>com.thegamefire.sablearchipelago</RootNamespace>
+    <SablePath>..\..\..\SteamLibrary\steamapps\common\Sable</SablePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,28 +27,25 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\interop\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="GameTemplateAssembly">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\GameTemplateAssembly.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\interop\GameTemplateAssembly.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppInterop.Common">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
-    </Reference>
-    <Reference Include="Opencoding.Console">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Opencoding.Console.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Addressables">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Unity.Addressables.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\interop\Unity.Addressables.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
