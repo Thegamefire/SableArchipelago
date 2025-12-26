@@ -40,6 +40,9 @@
     <Reference Include="Il2Cppmscorlib">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
     </Reference>
+    <Reference Include="Opencoding.Console">
+      <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Opencoding.Console.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Addressables">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Sable\BepInEx\interop\Unity.Addressables.dll</HintPath>
     </Reference>

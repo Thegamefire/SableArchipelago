@@ -1,20 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.MultiClient.Net.Models;
 using BehaviorDesigner.Runtime.Tasks;
+using CollectiblesBehaviour;
+using UnityEngine;
 
 namespace com.thegamefire.sablearchipelago;
 
 public class ArchipelagoClient
 {
     private ArchipelagoSession _session;
+    public Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
+    public int LastHandledItemIndex;
 
     public ArchipelagoClient()
     {
-        _session = ArchipelagoSessionFactory.CreateSession(Plugin.configApHost.Value);
+        _session = ArchipelagoSessionFactory.CreateSession(Plugin.ConfigApHost.Value);
         _session.MessageLog.OnMessageReceived += this.OnMessageReceived;
         _session.Socket.ErrorReceived += this.OnErrorReceived;
+        _session.Items.ItemReceived += this.OnItemReceived;
 
     }
 
@@ -24,9 +32,8 @@ public class ArchipelagoClient
 
         try
         {
-            // handle TryConnectAndLogin attempt here and save the returned object to `result`
-            result = _session.TryConnectAndLogin("", Plugin.configApSlot.Value, ItemsHandlingFlags.AllItems, 
-                new Version(0, 6, 5), null, null, Plugin.configApPassword.Value);
+            result = _session.TryConnectAndLogin("Sable", Plugin.ConfigApSlot.Value, ItemsHandlingFlags.AllItems, 
+                new Version(0, 6, 5), null, null, Plugin.ConfigApPassword.Value);
         }
         catch (Exception e)
         {
@@ -36,7 +43,7 @@ public class ArchipelagoClient
         if (!result.Successful)
         {
             LoginFailure failure = (LoginFailure)result;
-            string errorMessage = $"Failed to Connect to {Plugin.configApHost.Value} as {Plugin.configApSlot.Value}:";
+            string errorMessage = $"Failed to Connect to {Plugin.ConfigApHost.Value} as {Plugin.ConfigApSlot.Value}:";
             foreach (string error in failure.Errors)
             {
                 errorMessage += $"\n    {error}";
@@ -58,7 +65,7 @@ public class ArchipelagoClient
 
     private void OnMessageReceived(LogMessage message)
     {
-        Plugin.Log.LogInfo(message);
+        Plugin.Log.LogMessage("Archipelago: " + message);
     }
 
     private void OnErrorReceived(Exception e, string message)
@@ -66,9 +73,40 @@ public class ArchipelagoClient
         Plugin.Log.LogError($"Archipelago Error: {message}");
     }
 
+    private void OnItemReceived(ReceivedItemsHelper itemHelper)
+    {
+        ItemInfo item = itemHelper.DequeueItem();
+        if (itemHelper.Index <= LastHandledItemIndex)
+        {
+            return;
+        }
+
+        LastHandledItemIndex++;
+        if (!ServerItemMap.ContainsKey(item.ItemName))
+        {
+            Plugin.Log.LogError("Received Unknown Item: "+item);
+            return;
+        }
+
+        string ingameName = ServerItemMap[item.ItemName];
+        Plugin.ReceiveItem(ingameName);
+    }
+
     public void SendDeath()
     {  
         Plugin.Log.LogWarning("Stamina Ran Out");
+    }
+
+    public void SendLocation(string locationName)
+    {
+        Plugin.Log.LogMessage($"Sending Location: {locationName}");
+    }
+
+    public void SendChum(ChumBehaviour chum)
+    {
+        Vector3 pos = chum.transform.position;
+        string key = $"{Math.Round(pos.x)};{Math.Round(pos.y)};{Math.Round(pos.z)}";
+        SendLocation(Plugin.ChumNameMap[key]);
     }
 }
 
