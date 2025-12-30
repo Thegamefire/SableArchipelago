@@ -41,6 +41,9 @@
     <Reference Include="Il2Cppmscorlib">
       <HintPath>$(SablePath)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
     </Reference>
+    <Reference Include="Opencoding.Console">
+      <HintPath>$(SablePath)\BepInEx\interop\Opencoding.Console.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Addressables">
       <HintPath>$(SablePath)\BepInEx\interop\Unity.Addressables.dll</HintPath>
     </Reference>

@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BehaviorDesigner.Runtime.Tasks.Unity.Timeline;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using CollectiblesBehaviour;
+using Core.GameManagerStates;
+using GameTemplate;
 using HarmonyLib;
-using Items;
-using UI.HUD;
-using UI.HUD.Notifications;
-using UI.HUD.Notifications.NotificationTypes;
+using Il2CppInterop.Runtime.Runtime;
+using Locations;
+using Opencoding.Console;
 using UnityEngine;
 
 namespace com.thegamefire.sablearchipelago;
@@ -26,17 +26,24 @@ public class Plugin : BasePlugin
     internal static ConfigEntry<string> ConfigApHost;
     internal static ConfigEntry<string> ConfigApSlot;
     internal static ConfigEntry<string> ConfigApPassword;
+    internal static ConfigEntry<bool> ConfigApDeathlink;
 
     internal static Dictionary<string, string> ChumNameMap = UtilityMappings.LoadChumDictionary();
     
     internal static ArchipelagoClient Client;
 
-    internal static bool SableWasExhausted = false;
     internal static ItemDatabase ItemDB = null;
     internal static PlayerInventory SableInventory = null;
+    internal static SableCharacterController CharacterController = null;
 
+    // Values To Be Listened To Next Frame //
+    internal static bool DeathReceived = false;
     internal static bool ReceivingItem = false;
     internal static Queue<string> ReceivedItemsQueue = new Queue<string>();
+    internal static bool SableWasExhausted = false;
+    
+    internal static Vector3 lastNamedLocation = new Vector3();
+    internal static bool DeathModeTravel = true;
     
     public override void Load()
     {
@@ -69,6 +76,9 @@ public class Plugin : BasePlugin
             "AP_Password",
             "",
             "The password of the archipelago server, if there is no password leave this empty.");
+
+        ConfigApDeathlink = Config.Bind("Archipelago Connection", "AP_Deathlink", true,
+            "Whether to share deaths among players");
     }
 
     private static void LogAllItemsInGame()
@@ -154,6 +164,11 @@ public class Plugin : BasePlugin
     {
         static void Prefix(SableCharacterController __instance)
         {
+            if (CharacterController == null)
+            {
+                CharacterController = __instance;
+            }
+
             if (ItemDB == null)
             {
                 ItemDB = Resources
@@ -172,6 +187,21 @@ public class Plugin : BasePlugin
                 }
             }
 
+            if (DeathReceived)
+            {
+                Log.LogMessage("Deathlink Received");
+                if (DeathModeTravel && Plugin.lastNamedLocation != new Vector3())
+                {
+                    DebugCommands.FastTravelToCoords(Plugin.lastNamedLocation);
+                } else {
+                    // This doesn't yet stop a climb, or put the stamina to 0
+                    SableWasExhausted = true;
+                    __instance.CanClimb = false;
+                    __instance.Exhausted = true;
+                }
+                DeathReceived = false; 
+            }
+
             if (SableWasExhausted != __instance.Exhausted)
             {
                 if (__instance.Exhausted)
@@ -179,6 +209,32 @@ public class Plugin : BasePlugin
                     Client.SendDeath();
                 }
                 SableWasExhausted = __instance.Exhausted;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(DebugConsole), "set_IsVisible")]
+    class ConsoleVisibilityPatch
+    {
+        // When using DebugCommands, DebugConsole.set_IsVisible gives an error because the debug console
+        // is not correctly initialized. Therefore, we simply stop the method from getting called.
+        static bool Prefix(DebugConsole __instance)
+        {
+            return false;
+        }
+    }
+    
+    [HarmonyPatch(typeof(LocationTrigger), nameof(LocationTrigger.PlayerEntered))]
+    public static class LocationTriggerPlayerEnteredPatch
+    {
+        static void Postfix()
+        {
+            var scene = LocationTrigger.LastLocation;
+            if (scene.HasValue && Plugin.CharacterController != null)
+            {
+                string locationName = scene.Value.name;
+                Log.LogMessage($"Entered Location: {locationName}");
+                Plugin.lastNamedLocation = Plugin.CharacterController.transform.position;
             }
         }
     }

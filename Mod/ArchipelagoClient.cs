@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+using Archipelago.MultiClient.Net.Converters;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Models;
-using BehaviorDesigner.Runtime.Tasks;
+using Archipelago.MultiClient.Net.Packets;
 using CollectiblesBehaviour;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace com.thegamefire.sablearchipelago;
@@ -14,6 +17,8 @@ namespace com.thegamefire.sablearchipelago;
 public class ArchipelagoClient
 {
     private ArchipelagoSession _session;
+    private DeathLinkService _deathLinkService;
+    
     public Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
     public int LastHandledItemIndex;
     public int HicaricRingLocationsChecked;
@@ -25,7 +30,14 @@ public class ArchipelagoClient
         _session.MessageLog.OnMessageReceived += this.OnMessageReceived;
         _session.Socket.ErrorReceived += this.OnErrorReceived;
         _session.Items.ItemReceived += this.OnItemReceived;
+        _deathLinkService = _session.CreateDeathLinkService();
+        _deathLinkService.OnDeathLinkReceived += this.OnDeathReceived;
 
+    }
+
+    public string GetPlayerName()
+    {
+        return _session.Players.GetPlayerName(_session.ConnectionInfo.Slot);
     }
 
     public void Connect()
@@ -34,8 +46,13 @@ public class ArchipelagoClient
 
         try
         {
+
             result = _session.TryConnectAndLogin("Sable", Plugin.ConfigApSlot.Value, ItemsHandlingFlags.AllItems, 
                 new Version(0, 6, 5), null, null, Plugin.ConfigApPassword.Value);
+            
+            if (Plugin.ConfigApDeathlink.Value) {
+                _deathLinkService.EnableDeathLink();
+            }
         }
         catch (Exception e)
         {
@@ -94,9 +111,30 @@ public class ArchipelagoClient
         Plugin.ReceiveItem(ingameName);
     }
 
+    private void OnDeathReceived(DeathLink deathLink)
+    {
+        if (deathLink.Source != GetPlayerName())
+        {
+            Plugin.DeathReceived = true;
+        }
+    }
+
     public void SendDeath()
     {  
         Plugin.Log.LogWarning("Stamina Ran Out");
+        // DeathLink death = new DeathLink(GetPlayerName(), "Stamina Ran Out");
+        // _deathLinkService.SendDeathLink(death); // This doesn't work for some reason
+        var bouncePacket = new BouncePacket
+        {
+            Tags = new List<string> { "DeathLink" },
+            Data = new Dictionary<string, JToken> {
+                {"time", DateTime.UtcNow.ToUnixTimeStamp()},
+                {"source", GetPlayerName()},
+                {"cause", $"{GetPlayerName()}'s Stamina Ran Out"}
+            }
+        };
+
+        _session.Socket.SendPacket(bouncePacket);
     }
 
     public void SendLocation(string locationName)
