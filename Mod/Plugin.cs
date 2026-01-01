@@ -43,7 +43,6 @@ public class Plugin : BasePlugin
     internal static bool SableWasExhausted = false;
     
     internal static Vector3 lastNamedLocation = new Vector3();
-    internal static bool DeathModeTravel = true;
     
     public override void Load()
     {
@@ -164,6 +163,7 @@ public class Plugin : BasePlugin
     {
         static void Prefix(SableCharacterController __instance)
         {
+            Log.LogDebug($"FallDownAngle: {__instance.FallDownAngle}");
             if (CharacterController == null)
             {
                 CharacterController = __instance;
@@ -190,14 +190,9 @@ public class Plugin : BasePlugin
             if (DeathReceived)
             {
                 Log.LogMessage("Deathlink Received");
-                if (DeathModeTravel && Plugin.lastNamedLocation != new Vector3())
+                if (Plugin.lastNamedLocation != new Vector3())
                 {
                     DebugCommands.FastTravelToCoords(Plugin.lastNamedLocation);
-                } else {
-                    // This doesn't yet stop a climb, or put the stamina to 0
-                    SableWasExhausted = true;
-                    __instance.CanClimb = false;
-                    __instance.Exhausted = true;
                 }
                 DeathReceived = false; 
             }
@@ -207,6 +202,7 @@ public class Plugin : BasePlugin
                 if (__instance.Exhausted)
                 {
                     Client.SendDeath();
+                    __instance.SprintStaminaRate = 0.25f;
                 }
                 SableWasExhausted = __instance.Exhausted;
             }
