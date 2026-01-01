@@ -12,22 +12,7 @@ class Goal(Choice):
     option_all_masks = 1
     default = 1
 
-class DeathLinkMode(Choice):
-    """What to do when a deathlink is received
-    empty_stamina: Makes you exhausted.
-    fasttravel_last_location: Teleports you to the last named location you visited.
-    """
-    display_name = "DeathLinkMode"
-    option_stamina = 0
-    option_fasttravel = 1
-    default = 1
-
-# class RandomizeFish(Toggle):
-#     """Adds Fish to the randomizer"""
-#     display_name = "Randomize Fish"
-
 @dataclass
 class SableOptions(PerGameCommonOptions):
     goal: Goal
     death_link: DeathLink
-    death_link_mode: DeathLinkMode
