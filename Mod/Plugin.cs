@@ -29,6 +29,7 @@ public class Plugin : BasePlugin
     internal static ConfigEntry<bool> ConfigApDeathlink;
 
     internal static Dictionary<string, string> ChumNameMap = UtilityMappings.LoadChumDictionary();
+    internal static HashSet<string> NonRandomizedItems = UtilityMappings.NonRandomizedItems();
     
     internal static ArchipelagoClient Client;
 
@@ -115,8 +116,7 @@ public class Plugin : BasePlugin
     {
         static bool Prefix(PlayerInventory __instance, Items.Item item, Int32 quantity)
         { // Received Items are still seen as checks and not given
-            Log.LogMessage($"Item received: from archipelago? {Plugin.IsReceivingItem()}");
-            if (Plugin.IsReceivingItem())
+            if (Plugin.IsReceivingItem() || Plugin.NonRandomizedItems.Contains(item.ItemDef.Name))
             {
                 Plugin.ReceivingItem = false;
                 Log.LogMessage($"Received Item: {item.itemDef.Name}");
@@ -163,7 +163,6 @@ public class Plugin : BasePlugin
     {
         static void Prefix(SableCharacterController __instance)
         {
-            Log.LogDebug($"FallDownAngle: {__instance.FallDownAngle}");
             if (CharacterController == null)
             {
                 CharacterController = __instance;
@@ -202,7 +201,6 @@ public class Plugin : BasePlugin
                 if (__instance.Exhausted)
                 {
                     Client.SendDeath();
-                    __instance.SprintStaminaRate = 0.25f;
                 }
                 SableWasExhausted = __instance.Exhausted;
             }

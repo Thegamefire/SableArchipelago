@@ -177,6 +177,40 @@ public static class UtilityMappings
             };
     }
 
+    public static HashSet<string> NonRandomizedItems()
+    {
+        return new HashSet<string>()
+        {
+            "ChildhoodSetMask",
+            "ChildhoodSetTop",
+            "ChildhoodSetTrousers",
+            "Calibrator",
+            "ControlPanel",
+            "PowerSupply",
+            "Compass",
+            "GlidingStone01",
+            "GlidingStone02",
+            "Navigator",
+            "CatEarCanyonMap",
+            
+            
+            "AtomicSuitHelmet",
+            "CartographersMask",
+            "ChumMask",
+            "ClimbingSetMask",
+            "EngineerSetHelmet",
+            "EntertainersMask",
+            "FishingSetMask",
+            "GuardMask",
+            "HerculesBeetleMask",
+            "IbexiiSetMask",
+            "MerchantsMask",
+            "SandwormMask",
+            "ScrappersMask",
+            "ShadeOfEccriaMask",
+        };
+    }
+
     public static Dictionary<string, string> LoadServerItemNameDict()
     {
         return new Dictionary<string, string>()
