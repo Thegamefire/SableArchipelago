@@ -15,7 +15,9 @@ def get_location_name_to_id():
         table[f"Chum {i}"]=4800+i
     for i in range(1, 7):
         table[f"Chum Tear {i}"]=4800+165+i
-        table[f"Hicaric Ring {i}"]=4800+165+6+i
+
+    for i, area in enumerate(["Sansee", "Redsee","Sodic Waste","Badlands","Hakoa","The Wash"]):
+        table[f"Hicaric Ring ({area})"]=4800+165+6+i
 
     return table
 
