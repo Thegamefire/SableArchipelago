@@ -9,6 +9,7 @@ using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using CollectiblesBehaviour;
+using MapMagic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -158,6 +159,25 @@ public class ArchipelagoClient
         Vector3 pos = chum.transform.position;
         string key = $"{Math.Round(pos.x)};{Math.Round(pos.y)};{Math.Round(pos.z)}";
         SendLocation(Plugin.ChumNameMap[key]);
+    }
+
+    public void SendHicaricRing(Vector3 playerLoc)
+    {
+        Vector3 closestRingLoc = new Vector3();
+        float closestRingDist = float.MaxValue;
+        
+        
+        foreach (Vector3 ringLoc in UtilityMappings.GetHicaricRingLocations().Keys)
+        {
+            float dist = ringLoc.DistAxisAligned(playerLoc);
+            if (dist < closestRingDist)
+            {
+                closestRingDist = dist;
+                closestRingLoc = ringLoc;
+            }
+        }
+        
+        SendLocation(UtilityMappings.GetHicaricRingLocations()[closestRingLoc]);
     }
 }
 

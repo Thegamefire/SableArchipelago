@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.thegamefire.sablearchipelago;
 
@@ -466,5 +467,18 @@ public static class UtilityMappings
                 {"Wind Chime Dye", "WindChimePalette"},
                 {"Yellow Elephant Beetle", "YellowElephantBeetle"},
             };
+    }
+
+    public static Dictionary<Vector3, string> GetHicaricRingLocations()
+    {
+        return new Dictionary<Vector3, string>()
+        {
+            {new Vector3(1780, 30, 2465), "Hicaric Ring (Sansee)"},
+            {new Vector3(-3116, 12, 1945), "Hicaric Ring (Redsee)"},
+            {new Vector3(4235, 6, 2602), "Hicaric Ring (Sodic Waste)"},
+            {new Vector3(-137, 43, -1750), "Hicaric Ring (Badlands)"},
+            {new Vector3(-2845, 75, -2650), "Hicaric Ring (Hakoa)"},
+            {new Vector3(4254, 111, -2876), "Hicaric Ring (The Wash)"}
+        };
     }
 }

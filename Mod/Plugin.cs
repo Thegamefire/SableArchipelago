@@ -7,10 +7,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using CollectiblesBehaviour;
-using Core.GameManagerStates;
-using GameTemplate;
 using HarmonyLib;
-using Il2CppInterop.Runtime.Runtime;
 using Locations;
 using Opencoding.Console;
 using UnityEngine;
@@ -44,6 +41,8 @@ public class Plugin : BasePlugin
     internal static bool SableWasExhausted = false;
     
     internal static Vector3 lastNamedLocation = new Vector3();
+
+    internal static bool ancientRingCollected = false;
     
     public override void Load()
     {
@@ -130,6 +129,12 @@ public class Plugin : BasePlugin
             {
                 return false;
             }
+            else if (item.ItemDef.Name == "AnAncientRaceKeyItem")
+            {
+                Plugin.ancientRingCollected = true;
+                return false;
+            }
+
             Plugin.Client.SendLocation(item.itemDef.Name_EN);
 
             return false;
@@ -203,6 +208,13 @@ public class Plugin : BasePlugin
                     Client.SendDeath();
                 }
                 SableWasExhausted = __instance.Exhausted;
+            }
+
+            if (ancientRingCollected)
+            {
+                Log.LogMessage($"Hicaric Ring Collected at {__instance.transform.position}");
+                Plugin.Client.SendHicaricRing(__instance.transform.position);
+                Plugin.ancientRingCollected = false;
             }
         }
     }
