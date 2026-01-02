@@ -44,6 +44,11 @@ prologue_items = [
     "Calibrator",
     "ControlPanel",
     "PowerSupply",
+    "Compass",
+    "GlidingStone01",
+    "GlidingStone02",
+    "Navigator",
+    "CatEarCanyonMap"
 ]
 
 # Randomized Items #
@@ -306,7 +311,7 @@ maps = {
     # Reserved Id's: 4301-4349
     4301: "BadlandsMap",
     4302: "BlackDesertMap",
-    4303: "CatEarCanyonMap",
+    # 4303: "CatEarCanyonMap",  # This shouldn't be randomized as it breaks a quest in the prologue
     4304: "EasternDuneMap",
     4305: "SaltPlainsMap",
     4306: "WesternDuneMap",
@@ -316,20 +321,16 @@ maps = {
 key_items = {
     # Key Items
     # Reserved Id's: 4351-4399
-    4351: "Compass",
-    4352: "GlidingStone01",
-    4353: "GlidingStone02",
-    4354: "Navigator",
-    4355: "AnAncientRaceKeyItem",  # There should be 6 in the pool
-    4356: "BasicFishingRod",
-    4357: "TricksterAtomicRod",
-    4358: "Chum",  # There should be 165 in the pool
-    4359: "ChumTear",  # There should be 6 in the pool
+    4351: "AnAncientRaceKeyItem",  # There should be 6 in the pool
+    4352: "BasicFishingRod",
+    4353: "TricksterAtomicRod",
+    4354: "Chum",  # There should be 165 in the pool
+    4355: "ChumTear",  # There should be 6 in the pool
 
     # Atomic Heart Quest Items,
-    4360: "AtomicHeartKeycard",  # 'Atomic Heart Keycard',
-    4361: "AtomicHeartPowerCoreBroken",  # 'Broken Atomic Heart Powercore',
-    4362: "AtomicHeartPowerCoreRepaired",  # 'Repaired Atomic Heart Powercore',
+    4356: "AtomicHeartKeycard",  # 'Atomic Heart Keycard',
+    4357: "AtomicHeartPowerCoreBroken",  # 'Broken Atomic Heart Powercore',
+    4358: "AtomicHeartPowerCoreRepaired",  # 'Repaired Atomic Heart Powercore',
 }
 
 def get_classification(item_id: int) -> ItemClassification:
