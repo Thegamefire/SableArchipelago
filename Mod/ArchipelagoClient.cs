@@ -85,6 +85,16 @@ public class ArchipelagoClient
 
     private void OnMessageReceived(LogMessage message)
     {
+        if (message is ItemSendLogMessage itemSendLogMessage && itemSendLogMessage.IsSenderTheActivePlayer && !itemSendLogMessage.IsReceiverTheActivePlayer)
+        {
+            ItemInfo item = itemSendLogMessage.Item;
+            ApPopUp popUp = new ApPopUp(
+                $"Collected {item.LocationName}",
+                    $"This sent {item.ItemDisplayName} to {itemSendLogMessage.Receiver.Name}"
+            );
+            UiHelper.ToShowPopUpQueue.Enqueue(popUp);
+        }
+
         Plugin.Log.LogMessage("Archipelago: " + message);
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
@@ -8,6 +7,7 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using CollectiblesBehaviour;
 using HarmonyLib;
+using Items;
 using Locations;
 using Opencoding.Console;
 using UnityEngine;
@@ -28,11 +28,9 @@ public class Plugin : BasePlugin
     internal static Dictionary<string, string> ChumNameMap = UtilityMappings.LoadChumDictionary();
     internal static HashSet<string> NonRandomizedItems = UtilityMappings.NonRandomizedItems();
     
+    internal static bool DeathLinkIsFastTravelMode = false;
+    
     internal static ArchipelagoClient Client;
-
-    internal static ItemDatabase ItemDB = null;
-    internal static PlayerInventory SableInventory = null;
-    internal static SableCharacterController CharacterController = null;
 
     // Values To Be Listened To Next Frame //
     internal static bool DeathReceived = false;
@@ -43,6 +41,7 @@ public class Plugin : BasePlugin
     internal static Vector3 lastNamedLocation = new Vector3();
 
     internal static bool ancientRingCollected = false;
+    internal static bool RegisteredCustomIcon = false;
     
     public override void Load()
     {
@@ -82,21 +81,19 @@ public class Plugin : BasePlugin
 
     private static void LogAllItemsInGame()
     {
-        if (ItemDB != null)
+        ItemDatabase itemDb = SingletonAsset.Instance<ItemDatabase>();
+        var sb = new System.Text.StringBuilder();
+        foreach (var item in itemDb.Items)
         {
-            var sb = new System.Text.StringBuilder();
-            foreach (var item in ItemDB.Items)
-            {
-                if (item?.ItemDef == null)
-                    continue;
-                sb.Append("'");
-                sb.Append(item.ItemDef.Name);
-                sb.Append("': '");
-                sb.Append(item.ItemDef.Name_EN);
-                sb.Append("', \n");
-            }
-            Log.LogMessage("Items: \n" + sb.ToString());
+            if (item?.ItemDef == null)
+                continue;
+            sb.Append("'");
+            sb.Append(item.ItemDef.Name);
+            sb.Append("': '");
+            sb.Append(item.ItemDef.Name_EN);
+            sb.Append("', \n");
         }
+        Log.LogMessage("Items: \n" + sb.ToString());
     }
 
     public static void ReceiveItem(string itemName)
@@ -120,9 +117,6 @@ public class Plugin : BasePlugin
                 Plugin.ReceivingItem = false;
                 Log.LogMessage($"Received Item: {item.itemDef.Name}");
                 return true;
-            }
-            if (Plugin.SableInventory == null) {
-                Plugin.SableInventory = __instance;
             }
 
             if (item.ItemDef.Name == "Chum")
@@ -168,36 +162,40 @@ public class Plugin : BasePlugin
     {
         static void Prefix(SableCharacterController __instance)
         {
-            if (CharacterController == null)
+            if (!RegisteredCustomIcon)
             {
-                CharacterController = __instance;
+                SingletonAsset.Instance<TextureLoader>().inventoryImagesDictionary.Add("ArchipelagoIcon", UiHelper.GetArchipelagoIcon());
+                RegisteredCustomIcon = true;
             }
+            UiHelper.CheckShowPopUp();
 
-            if (ItemDB == null)
-            {
-                ItemDB = Resources
-                    .FindObjectsOfTypeAll<ItemDatabase>()
-                    .FirstOrDefault();
-            }
-            else if (ReceivedItemsQueue.Count > 0)
+            if (ReceivedItemsQueue.Count > 0)
             {
                 string itemName = ReceivedItemsQueue.Dequeue();
-                IList<PlayerInventory> inventories = Plugin.SableInventory!=null ? new List<PlayerInventory>{Plugin.SableInventory}: Resources.FindObjectsOfTypeAll<PlayerInventory>();
-                foreach (PlayerInventory inventory in
-                         inventories) // the 2nd seems to be the correct one for some reason
-                {
-                    Plugin.ReceivingItem = true;
-                    inventory.Add(ItemDB.GetItemFromName(itemName), 1);
-                }
+                
+                GameObject playerInventoryParent = new GameObject("PlayerInventoryUtilityParent");
+                PlayerInventoryUtility inventoryUtility = playerInventoryParent.AddComponent<PlayerInventoryUtility>();
+                Item item = SingletonAsset.Instance<ItemDatabase>().GetItemFromName(itemName);
+                Plugin.ReceivingItem = true;
+                inventoryUtility.AddItemToInventory(item, 1);
             }
 
             if (DeathReceived)
             {
                 Log.LogMessage("Deathlink Received");
-                if (Plugin.lastNamedLocation != new Vector3())
+                if (DeathLinkIsFastTravelMode)
                 {
-                    DebugCommands.FastTravelToCoords(Plugin.lastNamedLocation);
+                    if (Plugin.lastNamedLocation != new Vector3())
+                    {
+                        DebugCommands.FastTravelToCoords(Plugin.lastNamedLocation);
+                    }
                 }
+                else
+                {
+                    __instance.CurrentClimbDistance = 100f;
+                    SableWasExhausted = true;
+                }
+
                 DeathReceived = false; 
             }
 
@@ -236,11 +234,11 @@ public class Plugin : BasePlugin
         static void Postfix()
         {
             var scene = LocationTrigger.LastLocation;
-            if (scene.HasValue && Plugin.CharacterController != null)
+            if (scene.HasValue)
             {
                 string locationName = scene.Value.name;
                 Log.LogMessage($"Entered Location: {locationName}");
-                Plugin.lastNamedLocation = Plugin.CharacterController.transform.position;
+                Plugin.lastNamedLocation = SableGameManager.MainCharacter.transform.position;
             }
         }
     }

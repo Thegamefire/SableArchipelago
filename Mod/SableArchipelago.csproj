@@ -50,5 +50,18 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(SablePath)\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\APIcon.png" />
   </ItemGroup>
 </Project>
