@@ -11,13 +11,15 @@ def get_location_name_to_id():
     del table[items.ingame_name_to_display["ChumTear"]]
     del table[items.ingame_name_to_display["AnAncientRaceKeyItem"]]
 
-    for i in range (1, 166):
+    for i in range (1, 166): # 4801-4965
         table[f"Chum {i}"]=4800+i
-    for i in range(1, 7):
+    for i in range(1, 7): # 4966-4971
         table[f"Chum Tear {i}"]=4800+165+i
 
     for i, area in enumerate(["Sansee", "Redsee","Sodic Waste","Badlands","Hakoa","The Wash"]):
-        table[f"Hicaric Ring ({area})"]=4800+165+6+i
+        table[f"Hicaric Ring ({area})"]=4800+165+7+i
+
+    assert len(list(map(lambda x: x, table.values()))) == len(set(table.values()))
 
     return table
 
