@@ -1,4 +1,4 @@
-# Archipelago Mod for Sable
+# <img src="/Mod/Assets/SableArchipelago.svg" style="height: 4rem; width: 4rem;" alt="Mod Icon" /> Archipelago Mod for Sable
 
 This is a mod and apworld for playing Sable with the multiworld randomizer [Archipelago](https://github.com/ArchipelagoMW/Archipelago)
 
