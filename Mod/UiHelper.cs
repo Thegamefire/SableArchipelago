@@ -147,6 +147,14 @@ public class UiHelper
 
             apButtonGo.transform.SetSiblingIndex(creditsButton.transform.GetSiblingIndex() + 1);
             apButtonGo.name = "ArchipelagoButton";
+            
+            var image = apButtonGo.GetComponentsInChildren<Image>().FirstOrDefault(i => i.activeSprite!= null && i.activeSprite.name == "CreditsSettingsIcon");
+            if (image == null)
+            {
+                Plugin.Log.LogError("Couldn't find Button Icon");
+                return;
+            }
+            image.sprite = GetArchipelagoIcon();
 
             var apButton = apButtonGo.GetComponent<UiSelectableButton>();
             if (apButton == null)
