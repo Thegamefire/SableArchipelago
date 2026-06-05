@@ -207,9 +207,11 @@ public class UiHelper
             
             CreateText("Hostname", new Vector2(0, 0), 24, apPanel.transform);
             CreateInput("archipelago.gg:38281", new Vector2(0, 0), apPanel.transform);
+            CreateSpacer(5, apPanel.transform);
             
             CreateText("Slot", new Vector2(0, 0), 24, apPanel.transform);
             CreateInput("Player1", new Vector2(0, 0), apPanel.transform);
+            CreateSpacer(5, apPanel.transform);
             
             CreateText("Password", new Vector2(0, 0), 24, apPanel.transform);
             CreateInput("", new Vector2(0, 0), apPanel.transform);
@@ -236,6 +238,9 @@ public class UiHelper
             RectTransform rect = tmp.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(280, 30);
             rect.anchoredPosition = pos;
+            
+            var layout = obj.AddComponent<LayoutElement>();
+            layout.minHeight = 35;
             return tmp;
         }
         
@@ -248,7 +253,7 @@ public class UiHelper
             bg.type = Image.Type.Sliced;
             bg.color = new Color(0.91764f, 0.86274f, 0.84313f, 1f);
             RectTransform rect = inputObj.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(200, 35);
+            rect.sizeDelta = new Vector2(200, 45);
             rect.anchoredPosition = pos;
 
             GameObject textArea = new GameObject("TextArea", Il2CppType.Of<RectMask2D>());
@@ -281,8 +286,20 @@ public class UiHelper
 
             input.enabled = false;
             input.enabled = true;
+            
+            var layout = inputObj.AddComponent<LayoutElement>();
+            layout.minHeight = 40;
 
             return input;
+        }
+        
+        private static void CreateSpacer(float height, Transform parent)
+        {
+            var spacer = new GameObject("Spacer");
+            spacer.transform.SetParent(parent, false);
+
+            var layout = spacer.AddComponent<LayoutElement>();
+            layout.minHeight = height;
         }
     }
     
