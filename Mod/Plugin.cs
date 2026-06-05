@@ -24,11 +24,10 @@ public class Plugin : BasePlugin
     internal static ConfigEntry<string> ConfigApSlot;
     internal static ConfigEntry<string> ConfigApPassword;
     internal static ConfigEntry<bool> ConfigApDeathlink;
+    internal static ConfigEntry<bool> ConfigApDeathlinkIsFastTravelMode;
 
     internal static Dictionary<string, string> ChumNameMap = UtilityMappings.LoadChumDictionary();
     internal static HashSet<string> NonRandomizedItems = UtilityMappings.NonRandomizedItems();
-    
-    internal static bool DeathLinkIsFastTravelMode = false;
     
     internal static ArchipelagoClient Client;
 
@@ -77,6 +76,10 @@ public class Plugin : BasePlugin
 
         ConfigApDeathlink = Config.Bind("Archipelago Connection", "AP_Deathlink", true,
             "Whether to share deaths among players");
+        
+        ConfigApDeathlinkIsFastTravelMode = Config.Bind("Archipelago Connection", "AP_Deathlink_FastTravel", false,
+            "Whether you be sent back to the last visited named location instead of depleting your stamina on deathlink.");
+        
     }
 
     private static void LogAllItemsInGame()
@@ -183,7 +186,7 @@ public class Plugin : BasePlugin
             if (DeathReceived)
             {
                 Log.LogMessage("Deathlink Received");
-                if (DeathLinkIsFastTravelMode)
+                if (ConfigApDeathlinkIsFastTravelMode.Value)
                 {
                     if (Plugin.lastNamedLocation != new Vector3())
                     {

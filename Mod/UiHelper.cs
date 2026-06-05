@@ -13,6 +13,7 @@ using UIComponents.Layout.Components.Containers;
 using UIComponents.Layout.Components.Lists;
 using UIComponents.Screens;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -206,15 +207,25 @@ public class UiHelper
             }
             
             CreateText("Hostname", new Vector2(0, 0), 24, apPanel.transform);
-            CreateInput("archipelago.gg:38281", new Vector2(0, 0), apPanel.transform);
+            CreateInput(Plugin.ConfigApHost.Value, new Vector2(0, 0), apPanel.transform)
+                .onEndEdit.AddListener((UnityAction<string>)(value => Plugin.ConfigApHost.Value = value));
             CreateSpacer(5, apPanel.transform);
             
             CreateText("Slot", new Vector2(0, 0), 24, apPanel.transform);
-            CreateInput("Player1", new Vector2(0, 0), apPanel.transform);
+            CreateInput(Plugin.ConfigApSlot.Value, new Vector2(0, 0), apPanel.transform)
+                .onEndEdit.AddListener((UnityAction<string>)(value => Plugin.ConfigApSlot.Value = value));
             CreateSpacer(5, apPanel.transform);
             
             CreateText("Password", new Vector2(0, 0), 24, apPanel.transform);
-            CreateInput("", new Vector2(0, 0), apPanel.transform);
+            CreateInput(Plugin.ConfigApPassword.Value, new Vector2(0, 0), apPanel.transform)
+                .onEndEdit.AddListener((UnityAction<string>)(value => Plugin.ConfigApPassword.Value = value));
+            CreateSpacer(5, apPanel.transform);
+            
+            CreateToggle("DeathLink", Plugin.ConfigApDeathlink.Value, new Vector2(0, 0),  apPanel.transform)
+                .onValueChanged.AddListener((UnityAction<bool>)
+                    (value => Plugin.ConfigApDeathlink.Value = value)
+                );
+            CreateToggle("FastTravel on Death", false, new Vector2(0, 0),  apPanel.transform);
 
             apPanel.SetActive(false);
 
@@ -300,6 +311,93 @@ public class UiHelper
 
             var layout = spacer.AddComponent<LayoutElement>();
             layout.minHeight = height;
+        }
+        
+        private static Toggle CreateToggle(string label, bool initial, Vector2 pos, Transform parent)
+        {
+            GameObject toggleObj = new GameObject(
+                "Toggle",
+                Il2CppType.Of<Image>(),
+                Il2CppType.Of<Toggle>()
+            );
+
+            toggleObj.transform.SetParent(parent, false);
+
+            RectTransform rect = toggleObj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(250, 40);
+            rect.anchoredPosition = pos;
+
+            Image bg = toggleObj.GetComponent<Image>();
+            bg.color = new Color(0, 0, 0, 0);
+
+            Toggle toggle = toggleObj.GetComponent<Toggle>();
+            toggle.isOn = initial;
+
+            
+            GameObject textObj = new GameObject("Label", Il2CppType.Of<TextMeshProUGUI>());
+            textObj.transform.SetParent(toggleObj.transform, false);
+
+            TMP_Text labelText = textObj.GetComponent<TextMeshProUGUI>();
+            labelText.text = label;
+            labelText.fontSize = 24;
+            labelText.color = Color.black;
+            labelText.font = GetEuclidMediumFontAsset();
+            labelText.alignment = TextAlignmentOptions.MidlineLeft;
+
+            RectTransform labelRect = labelText.GetComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0, 0);
+            labelRect.anchorMax = new Vector2(1, 1);
+            labelRect.offsetMin = new Vector2(0, 0);
+            labelRect.offsetMax = new Vector2(-50, 0);
+
+            
+            GameObject boxObj = new GameObject("Box", Il2CppType.Of<Image>());
+            boxObj.transform.SetParent(toggleObj.transform, false);
+
+            Image box = boxObj.GetComponent<Image>();
+            box.color = new Color(0.91764f, 0.86274f, 0.84313f, 1f);
+            box.type = Image.Type.Sliced;
+
+            RectTransform boxRect = box.GetComponent<RectTransform>();
+            boxRect.anchorMin = new Vector2(1, 0.5f);
+            boxRect.anchorMax = new Vector2(1, 0.5f);
+            boxRect.pivot = new Vector2(1, 0.5f);
+            boxRect.sizeDelta = new Vector2(25, 25);
+            boxRect.anchoredPosition = new Vector2(-5, 0);
+
+            
+            GameObject checkObj = new GameObject("Check", Il2CppType.Of<Image>());
+            checkObj.transform.SetParent(boxObj.transform, false);
+
+            Image check = checkObj.GetComponent<Image>();
+            check.color = Color.black;
+
+            RectTransform checkRect = check.GetComponent<RectTransform>();
+            checkRect.anchorMin = new Vector2(0.5f, 0.5f);
+            checkRect.anchorMax = new Vector2(0.5f, 0.5f);
+            checkRect.pivot = new Vector2(0.5f, 0.5f);
+            checkRect.sizeDelta = new Vector2(12, 12);
+
+            
+            toggle.targetGraphic = box;
+            toggle.graphic = check;
+
+            checkObj.SetActive(initial);
+
+            toggle.onValueChanged.AddListener((UnityAction<bool>)(value =>
+            {
+                checkObj.SetActive(value);
+            }));
+
+            // force refresh like your input field trick
+            toggle.enabled = false;
+            toggle.enabled = true;
+
+            // optional layout element
+            var layout = toggleObj.AddComponent<LayoutElement>();
+            layout.minHeight = 40;
+
+            return toggle;
         }
     }
     
