@@ -1,18 +1,21 @@
 ﻿using System.Linq;
 using HarmonyLib;
 using MapMagic;
+using TMPro;
 using UIComponents.Layout.AtomicObjects.Buttons;
 using UIComponents.Layout.Components.Containers;
 using UIComponents.Layout.Components.Lists;
 using UIComponents.Screens;
+using UIComponents.Values.Enums;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace com.thegamefire.sablearchipelago;
 
 [HarmonyPatch(typeof(TitleSettingsScreen), nameof(TitleScreen.OnOpen))]
-public static class OpenTitleSettingsPatch
+public static class CustomSettingsPanel
 {
     private static bool _buttonAdded = false;
 
@@ -121,5 +124,22 @@ public static class OpenTitleSettingsPatch
         components.CopyTo(newComponents, 0);
         newComponents[^1] = apPanel;
         splitContainer.components = newComponents;
+    }
+}
+
+[HarmonyPatch(typeof(UiSplitInputContainer), nameof(UiSplitInputContainer.HandleInput))]
+public static class BlockInputWhenTypingPatch
+{
+    static bool Prefix(UiPlayerInput inputType)
+    {
+        if (inputType.InputType == UiPlayerInputType.Back ||
+            inputType.InputType == UiPlayerInputType.Up   ||
+            inputType.InputType == UiPlayerInputType.Down)
+        {
+            var selected = EventSystem.current?.currentSelectedGameObject;
+            if (selected != null && selected.GetComponent<TMP_InputField>() is { isFocused: true })
+                return false;
+        }
+        return true;
     }
 }
