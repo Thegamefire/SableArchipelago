@@ -3,17 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.GameManagerStates;
 using GameTemplate;
+using HarmonyLib;
 using Il2CppInterop.Runtime;
 using Items;
+using MapMagic;
+using TMPro;
+using UIComponents.Layout.AtomicObjects.Buttons;
+using UIComponents.Layout.Components.Containers;
+using UIComponents.Layout.Components.Lists;
+using UIComponents.Screens;
 using UnityEngine;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 
 namespace com.thegamefire.sablearchipelago;
 
 public class UiHelper
 {
-    
-    public static Queue<ApPopUp> ToShowPopUpQueue = new Queue<ApPopUp>();
+    private static TMP_FontAsset _euclidMediumFont;
+    private static TMP_FontAsset _euclidRegularFont;
+    public static readonly Queue<ApPopUp> ToShowPopUpQueue = new ();
 
     public static void CheckShowPopUp()
     {
@@ -89,6 +99,186 @@ public class UiHelper
             return null;
         }
     }
+    
+    private static TMP_FontAsset GetEuclidMediumFontAsset()
+    {
+        if (_euclidMediumFont != null)
+            return _euclidMediumFont;
+
+        _euclidMediumFont = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().FirstOrDefault(b => b.name == "EuclidFlex-Medium SDF");
+        if (_euclidMediumFont == null)
+            Plugin.Log.LogError("Could not find EuclidFlex-Medium Font");
+
+        return _euclidMediumFont;
+    }
+    
+    private static TMP_FontAsset GetEuclidRegularFontAsset()
+    {
+        if (_euclidRegularFont != null)
+            return _euclidRegularFont;
+
+        _euclidRegularFont = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().FirstOrDefault(b => b.name == "EuclidFlex-Regular SDF");
+        if (_euclidRegularFont == null)
+            Plugin.Log.LogError("Could not find EuclidFlex-Medium Font");
+
+        return _euclidRegularFont;
+    }
+    
+    [HarmonyPatch(typeof(TitleSettingsScreen), nameof(TitleScreen.OnOpen))]
+    public static class OpenTitleSettingsPatch
+    {
+        private static bool _buttonAdded = false;
+
+        static void Postfix(TitleSettingsScreen __instance)
+        {
+            if (_buttonAdded) return;
+
+            var allButtons = __instance.GetComponentsInChildren<UiSelectableButton>();
+            var creditsButton = allButtons
+                .FirstOrDefault(b => b.gameObject.name.ToLower().Contains("credit"));
+            if (creditsButton == null)
+            {
+                Plugin.Log.LogError("Could not find CreditsButton field");
+                return;
+            }
+
+            var apButtonGo = Object.Instantiate(creditsButton.gameObject, 
+                creditsButton.transform.parent);
+
+            apButtonGo.transform.SetSiblingIndex(creditsButton.transform.GetSiblingIndex() + 1);
+            apButtonGo.name = "ArchipelagoButton";
+
+            var apButton = apButtonGo.GetComponent<UiSelectableButton>();
+            if (apButton == null)
+            {
+                Plugin.Log.LogError("Cloned GameObject has no UiSelectableButton");
+                return;
+            }
+
+            apButton.SetName("ArchipelagoButton");
+            apButton.Initialize();
+            apButton.buttonText.SetText("Archipelago");
+            
+            var uiLists = Resources.FindObjectsOfTypeAll<UiList>();
+            foreach (var uiList in uiLists)
+            {
+                if (uiList != null && uiList.name == "List")
+                {
+                    uiList.RefreshChildren();
+                    uiList.InitializeChildren();
+                    uiList.InitializeEvents();
+                }
+            }
+
+            _buttonAdded = true;
+            
+            var splitContainer = __instance.GetComponentInChildren<UiSplitInputContainer>();
+
+            var components = splitContainer.components;
+
+            var existingPanel = components[^1];
+            if (existingPanel == null)
+            {
+                Plugin.Log.LogError("[SableArchipelago] Failed To Create Custom Settings Panel");
+                return;
+            }
+
+            var apPanel = Object.Instantiate(existingPanel, existingPanel.transform.parent);
+            apPanel.name = "ArchipelagoPanel";
+            
+            
+            apPanel.transform.RemoveChildren();
+            
+            var panelUiList = apPanel.GetComponentInChildren<UiList>();
+            if (panelUiList != null)
+            {
+                panelUiList.RefreshChildren();
+                panelUiList.InitializeChildren();
+                panelUiList.InitializeEvents();
+            }
+            
+            CreateText("Hostname", new Vector2(0, 0), 24, apPanel.transform);
+            CreateInput("archipelago.gg:38281", new Vector2(0, 0), apPanel.transform);
+            
+            CreateText("Slot", new Vector2(0, 0), 24, apPanel.transform);
+            CreateInput("Player1", new Vector2(0, 0), apPanel.transform);
+            
+            CreateText("Password", new Vector2(0, 0), 24, apPanel.transform);
+            CreateInput("", new Vector2(0, 0), apPanel.transform);
+
+            apPanel.SetActive(false);
+
+            var newComponents = new GameObject[components.Length + 1];
+            components.CopyTo(newComponents, 0);
+            newComponents[^1] = apPanel;
+            splitContainer.components = newComponents;
+        }
+
+        static TMP_Text CreateText (string text, Vector2 pos, int size, Transform parent)
+        {
+            
+            GameObject obj = new GameObject(text, Il2CppType.Of<TextMeshProUGUI>());
+            obj.transform.SetParent(parent, false);
+            var tmp = obj.GetComponent<TextMeshProUGUI>();
+            tmp.text = text;
+            tmp.fontSize = size;
+            tmp.color = Color.black;
+            tmp.alignment = TextAlignmentOptions.Left;
+            tmp.font = GetEuclidMediumFontAsset();
+            RectTransform rect = tmp.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(280, 30);
+            rect.anchoredPosition = pos;
+            return tmp;
+        }
+        
+        private static TMP_InputField CreateInput(string initial, Vector2 pos, Transform parent)
+        {
+            GameObject inputObj = new GameObject("InputField", Il2CppType.Of<Image>(), Il2CppType.Of<TMP_InputField>());
+            inputObj.transform.SetParent(parent, false);
+
+            Image bg = inputObj.GetComponent<Image>();
+            bg.type = Image.Type.Sliced;
+            bg.color = new Color(0.91764f, 0.86274f, 0.84313f, 1f);
+            RectTransform rect = inputObj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(200, 35);
+            rect.anchoredPosition = pos;
+
+            GameObject textArea = new GameObject("TextArea", Il2CppType.Of<RectMask2D>());
+            textArea.transform.SetParent(inputObj.transform, false);
+            RectTransform textRect = textArea.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(5, 5);
+            textRect.offsetMax = new Vector2(-5, -5);
+
+            TMP_Text textComp = new GameObject("Text", Il2CppType.Of<TextMeshProUGUI>()).GetComponent<TextMeshProUGUI>();
+            textComp.transform.SetParent(textArea.transform, false);
+            textComp.text = initial;
+            textComp.fontSize = 20;
+            textComp.color = Color.black;
+            textComp.font = GetEuclidRegularFontAsset();
+            textComp.alignment = TextAlignmentOptions.Left;
+
+            RectTransform textCompRect = textComp.GetComponent<RectTransform>();
+            textCompRect.anchorMin = Vector2.zero;
+            textCompRect.anchorMax = Vector2.one;
+            textCompRect.offsetMin = Vector2.zero;
+            textCompRect.offsetMax = Vector2.zero;
+
+            TMP_InputField input = inputObj.GetComponent<TMP_InputField>();
+            input.textViewport = textRect;
+            input.textComponent = textComp;
+            input.text = initial;
+            input.caretColor = Color.black;
+
+            input.enabled = false;
+            input.enabled = true;
+
+            return input;
+        }
+    }
+    
+
 }
 
 public record ApPopUp(string Title, string Description);
