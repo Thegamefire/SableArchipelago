@@ -48,7 +48,8 @@ prologue_items = [
     "GlidingStone01",
     "GlidingStone02",
     "Navigator",
-    "CatEarCanyonMap"
+    "CatEarCanyonMap",
+    "IbexiiSetMask"
 ]
 
 # Randomized Items #
