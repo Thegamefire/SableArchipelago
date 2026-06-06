@@ -45,6 +45,12 @@ public class ArchipelagoClient
 
     public void Connect()
     {
+        if (_session.Socket.Connected)
+        {
+            Plugin.Log.LogMessage("Already Connected");
+            return;
+        }
+
         ConnectionState = ApConnectionState.Connecting;
         LoginResult result;
 
@@ -60,7 +66,6 @@ public class ArchipelagoClient
         }
         catch (Exception e)
         {
-            ConnectionState = ApConnectionState.Disconnected;
             result = new LoginFailure(e.GetBaseException().Message);
         }
 
@@ -87,6 +92,14 @@ public class ArchipelagoClient
         // initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
         var loginSuccess = (LoginSuccessful)result;
         ConnectionState = ApConnectionState.Connected;
+    }
+
+    public void Disconnect()
+    {
+        if (!_session.Socket.Connected)
+            return;
+        _session.Socket.DisconnectAsync().Wait();
+        ConnectionState = ApConnectionState.Disconnected;
     }
 
     private void OnMessageReceived(LogMessage message)

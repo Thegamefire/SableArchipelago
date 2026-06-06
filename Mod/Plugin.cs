@@ -59,7 +59,6 @@ public class Plugin : BasePlugin
         
         Log.LogInfo("Connecting to Archipelago Server...");
         Client = new ArchipelagoClient();
-        Client.Connect();
     }
 
     private void LoadConfig()

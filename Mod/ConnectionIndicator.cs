@@ -82,7 +82,19 @@ public class ApConnectionIndicator : MonoBehaviour
 
     private void Update()
     {
-        var (text, color) = _display[ArchipelagoClient.ConnectionState];
+        UpdateConnectionState(ArchipelagoClient.ConnectionState);
+
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            Plugin.Client.Disconnect();
+            UpdateConnectionState(ApConnectionState.Connecting);
+            Plugin.Client.Connect();
+        }
+    }
+
+    private void UpdateConnectionState(ApConnectionState state)
+    {
+        var (text, color) = _display[state];
         _label.SetText(text);
         _circle.color = color;
     }
