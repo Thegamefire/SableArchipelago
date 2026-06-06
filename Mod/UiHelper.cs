@@ -65,7 +65,17 @@ public class UiHelper
             new Vector2(0.5f, 0.5f)
         );
     }
-    
+
+    public static Sprite GetCircleSprite()
+    {
+        var myTexture = LoadEmbeddedTexture("com.thegamefire.sablearchipelago.Assets.Circle.png");
+        return Sprite.Create(
+            myTexture,
+            new Rect(0, 0, myTexture.width , myTexture.height),
+            new Vector2(0.5f, 0.5f)
+        );
+    }
+
     private static Texture2D LoadEmbeddedTexture(string resourceName)
     {
         try
@@ -94,7 +104,7 @@ public class UiHelper
         }
     }
     
-    private static TMP_FontAsset GetEuclidMediumFontAsset()
+    public static TMP_FontAsset GetEuclidMediumFontAsset()
     {
         if (_euclidMediumFont != null)
             return _euclidMediumFont;
@@ -106,7 +116,7 @@ public class UiHelper
         return _euclidMediumFont;
     }
     
-    private static TMP_FontAsset GetEuclidRegularFontAsset()
+    public static TMP_FontAsset GetEuclidRegularFontAsset()
     {
         if (_euclidRegularFont != null)
             return _euclidRegularFont;

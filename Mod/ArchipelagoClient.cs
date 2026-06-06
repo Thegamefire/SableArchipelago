@@ -20,10 +20,12 @@ public class ArchipelagoClient
     private ArchipelagoSession _session;
     private DeathLinkService _deathLinkService;
     
-    public Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
+    public readonly Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
     public int LastHandledItemIndex;
     public int HicaricRingLocationsChecked;
     public int ChumTearLocationsChecked;
+
+    public static ApConnectionState ConnectionState = ApConnectionState.Disconnected;
 
     public ArchipelagoClient()
     {
@@ -43,6 +45,7 @@ public class ArchipelagoClient
 
     public void Connect()
     {
+        ConnectionState = ApConnectionState.Connecting;
         LoginResult result;
 
         try
@@ -57,11 +60,13 @@ public class ArchipelagoClient
         }
         catch (Exception e)
         {
+            ConnectionState = ApConnectionState.Disconnected;
             result = new LoginFailure(e.GetBaseException().Message);
         }
 
         if (!result.Successful)
         {
+            ConnectionState = ApConnectionState.Disconnected;
             LoginFailure failure = (LoginFailure)result;
             string errorMessage = $"Failed to Connect to {Plugin.ConfigApHost.Value} as {Plugin.ConfigApSlot.Value}:";
             foreach (string error in failure.Errors)
@@ -81,6 +86,7 @@ public class ArchipelagoClient
         // used to interact with the server and the returned `LoginSuccessful` contains some useful information about the
         // initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
         var loginSuccess = (LoginSuccessful)result;
+        ConnectionState = ApConnectionState.Connected;
     }
 
     private void OnMessageReceived(LogMessage message)
@@ -100,6 +106,9 @@ public class ArchipelagoClient
 
     private void OnErrorReceived(Exception e, string message)
     {
+        if (!_session.Socket.Connected)
+            ConnectionState = ApConnectionState.Disconnected;
+
         Plugin.Log.LogError($"Archipelago Error: {message}");
     }
 
@@ -191,3 +200,7 @@ public class ArchipelagoClient
     }
 }
 
+public enum ApConnectionState
+{
+    Connected, Connecting, Disconnected
+}

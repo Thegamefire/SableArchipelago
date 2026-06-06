@@ -7,6 +7,7 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using CollectiblesBehaviour;
 using HarmonyLib;
+using Il2CppInterop.Runtime.Injection;
 using Items;
 using Locations;
 using Opencoding.Console;
@@ -48,6 +49,8 @@ public class Plugin : BasePlugin
         Log = base.Log;
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
      
+        ClassInjector.RegisterTypeInIl2Cpp<ApConnectionIndicator>();
+        
         Log.LogInfo("Loading config...");
         LoadConfig();
         Log.LogInfo("Config loaded!");
