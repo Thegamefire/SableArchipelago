@@ -153,7 +153,13 @@ public class ArchipelagoClient
     }
 
     public void SendDeath()
-    {  
+    {
+        if (ConnectionState != ApConnectionState.Connected)
+        {
+            Plugin.Log.LogWarning("Tried To Send Death When Not Connected");
+            return;
+        }
+
         Plugin.Log.LogWarning("Stamina Ran Out");
         // DeathLink death = new DeathLink(GetPlayerName(), "Stamina Ran Out");
         // _deathLinkService.SendDeathLink(death); // This doesn't work for some reason
@@ -172,6 +178,12 @@ public class ArchipelagoClient
 
     public void SendLocation(string locationName)
     {
+        if (ConnectionState != ApConnectionState.Connected)
+        {
+            Plugin.Log.LogWarning($"Tried To Send Location \"{locationName}\" When Not Connected");
+            return;
+        }
+        
         if (locationName == "Hicaric Ring Artefact")
         {
             locationName = $"Hicaric Ring {this.HicaricRingLocationsChecked + 1}";
