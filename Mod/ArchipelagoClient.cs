@@ -22,7 +22,6 @@ public class ArchipelagoClient
     
     public readonly Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
     public int LastHandledItemIndex;
-    public int HicaricRingLocationsChecked;
     public int ChumTearLocationsChecked;
 
     public static ApConnectionState ConnectionState = ApConnectionState.Disconnected;
@@ -184,14 +183,10 @@ public class ArchipelagoClient
             return;
         }
         
-        if (locationName == "Hicaric Ring Artefact")
-        {
-            locationName = $"Hicaric Ring {this.HicaricRingLocationsChecked + 1}";
-            HicaricRingLocationsChecked += 1;
-        } else if (locationName == "Chum Queen Tear")
+        if (locationName == "Chum Queen Tear")
         {
             locationName = $"Chum Tear {this.ChumTearLocationsChecked + 1}";
-            HicaricRingLocationsChecked += 1;
+            ChumTearLocationsChecked += 1;
         }
 
         Plugin.Log.LogMessage($"Sending Location: {locationName}");

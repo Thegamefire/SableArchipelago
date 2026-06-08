@@ -128,7 +128,7 @@ public class Plugin : BasePlugin
             {
                 return false;
             }
-            else if (item.ItemDef.Name == "AnAncientRaceKeyItem")
+            if (item.ItemDef.Name == "AnAncientRaceKeyItem")
             {
                 Plugin.ancientRingCollected = true;
                 return false;
@@ -160,13 +160,18 @@ public class Plugin : BasePlugin
     //         return false;
     //     }
     // }
-
+    
 
     [HarmonyPatch(typeof(SableCharacterController), nameof(SableCharacterController.Update))]
     static class OnFrame
     {
         static void Prefix(SableCharacterController __instance)
         {
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                StaminaManager.SyncStaminaToInventory();
+            }
+
             if (!RegisteredCustomIcon)
             {
                 SingletonAsset.Instance<TextureLoader>().inventoryImagesDictionary.Add("ArchipelagoIcon", UiHelper.GetArchipelagoIcon());
@@ -182,7 +187,9 @@ public class Plugin : BasePlugin
                 PlayerInventoryUtility inventoryUtility = playerInventoryParent.AddComponent<PlayerInventoryUtility>();
                 Item item = SingletonAsset.Instance<ItemDatabase>().GetItemFromName(itemName);
                 Plugin.ReceivingItem = true;
-                inventoryUtility.AddItemToInventory(item, 1);
+                inventoryUtility.AddItemToInventory(item);
+                if (item.itemDef.Name == "ChumTear")
+                    StaminaManager.SyncStaminaToInventory();
             }
 
             if (DeathReceived)
