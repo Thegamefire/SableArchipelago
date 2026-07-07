@@ -32,6 +32,11 @@ unused_items = [
     "SunkenTechnology",
     "TastyFish",
     "StyllousNote", # Could be in the game, but I don't know what this is
+
+    # Are part of the tutorial bike and not actually obtainable
+    "SandcutterBooster",
+    "SandcutterFront",
+    "SandcutterWings",
 ]
 
 game_starting_items = [
@@ -177,55 +182,53 @@ bike_parts = {
     4137: "SaltBikeBooster",
     4138: "SaltBikeFront",
     4139: "SaltBikeWings",
-    4140: "SandcutterBooster",
-    4141: "SandcutterFront",
-    4142: "SandcutterWings",
-    4143: "ScrapperBikeBooster",
-    4144: "ScrapperBikeFront",
-    4145: "ScrapperBikeWings",
-    4146: "ShadeOfEccriaBooster",
-    4147: "ShadeOfEccriaFront",
-    4148: "ShadeOfEccriaWings",
-    4149: "SpeedsterBikeBooster",
-    4150: "SpeedsterBikeFront",
-    4151: "SpeedsterBikeWings",
+    4140: "ScrapperBikeBooster",
+    4141: "ScrapperBikeFront",
+    4142: "ScrapperBikeWings",
+    4143: "ShadeOfEccriaBooster",
+    4144: "ShadeOfEccriaFront",
+    4145: "ShadeOfEccriaWings",
+    4146: "SpeedsterBikeBooster",
+    4147: "SpeedsterBikeFront",
+    4148: "SpeedsterBikeWings",
 }
 
 bike_palettes = {
     # Palettes
     # Reserved Id's: 4401-4499
+    # Commented Out Palettes are the palettes linked to bikeparts that aren't actually given separately
     4401: "AtomicCorePalette",
     4402: "AtomicShellPalette",
-    4403: "AtomicWhaleShipBikePalette",
+    # 4403: "AtomicWhaleShipBikePalette",
     4404: "AzurePalette",
-    4405: "BeetleBikePalette",
+    # 4405: "BeetleBikePalette",
     4406: "BeetleHuskPalette",
-    4407: "CartographerPalette",
-    4408: "CrazyBikePalette",
-    4409: "DeliveryBikePalette",
-    4410: "DragonFlyPalette",
+    # 4407: "CartographerPalette",
+    # 4408: "CrazyBikePalette",
+    # 4409: "DeliveryBikePalette",
+    # 4410: "DragonFlyPalette",
     4411: "DustyMonumentPalette",
     4412: "EccrineGreenPalette",
-    4413: "ExtractorPalette",
-    4414: "EyriesBikePalette",
-    4415: "GiraffeBikePalette",
-    4416: "GlidingBikePalette",
+    # 4413: "ExtractorPalette",
+    # 4414: "EyriesBikePalette",
+    # 4415: "GiraffeBikePalette",
+    # 4416: "GlidingBikePalette",
     4417: "HakoanBlackPalette",
     4418: "IbexiiRedPalette",
     4419: "LavenderFlashPalette",
-    4420: "LightningCrystalBikePalette",
-    4421: "MonumentalBikePalette",
-    4422: "NaturesGreenPalette",
+    # 4420: "LightningCrystalBikePalette",
+    # 4421: "MonumentalBikePalette",
+    # 4422: "NaturesGreenPalette",
     4423: "NeonFlashPalette",
-    4424: "NomadicBikePalette",
+    # 4424: "NomadicBikePalette",
     4425: "PyraustaGreyPalette",
-    4426: "RedBikePalette",
+    # 4426: "RedBikePalette",
     4427: "SaltPlainPoolsPalette",
-    4428: "SandcutterBikePalette",
+    # 4428: "SandcutterBikePalette",
     4429: "SandyPalette",
-    4430: "ScrapperPalette",
-    4431: "SpeedsterBikePalette",
-    4432: "StrawPalette",
+    # 4430: "ScrapperPalette",
+    # 4431: "SpeedsterBikePalette",
+    # 4432: "StrawPalette",
     4433: "SunsetsPalette",
     4434: "WashBluePalette",
     4435: "WindChimePalette",
@@ -335,9 +338,9 @@ key_items = {
 }
 
 def get_classification(item_id: int) -> ItemClassification:
-    if item_id in key_items | badges:
+    if item_id in key_items | badges | maps:
         return ItemClassification.progression
-    if item_id in maps | bike_parts:
+    if item_id in bike_parts:
         return ItemClassification.useful
     return ItemClassification.filler
 
@@ -612,7 +615,7 @@ ingame_name_to_display: dict[str, str] = {
 }
 
 filler = random_shit | insects | fish # Filler items can be collected multiple times
-item_id_to_name: dict[int, str] = transitive_dict(key_items | maps | badges | clothes | bike_palettes | bike_parts | filler| atomic_heart_clues | fish_clues, ingame_name_to_display)
+item_id_to_name: dict[int, str] = transitive_dict(key_items | masks | maps | badges | clothes | bike_palettes | bike_parts | filler| atomic_heart_clues | fish_clues, ingame_name_to_display)
 
 item_name_to_id: dict[str, int] = {v: k for k, v in item_id_to_name.items()}
 

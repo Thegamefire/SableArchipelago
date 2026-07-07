@@ -12,7 +12,20 @@ class Goal(Choice):
     option_all_masks = 1
     default = 1
 
+class RandomizeMasks(Choice):
+    """Whether to randomize masks
+    off: All masks are at their starting locations.
+    shuffle: All masks are at a location of another mask.
+    on: All masks are in the itempool.
+    """
+    display_name = "Randomize Masks"
+    option_off = 0
+    option_shuffle = 1
+    option_on = 2
+    default = 1
+
 @dataclass
 class SableOptions(PerGameCommonOptions):
     goal: Goal
     death_link: DeathLink
+    randomize_masks: RandomizeMasks
