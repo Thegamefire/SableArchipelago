@@ -9,6 +9,7 @@ using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using CollectiblesBehaviour;
+using com.thegamefire.sablearchipelago.UI;
 using MapMagic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;

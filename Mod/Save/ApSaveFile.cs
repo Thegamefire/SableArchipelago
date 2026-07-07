@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using com.thegamefire.sablearchipelago.Save;
+using HarmonyLib;
 
 namespace com.thegamefire.sablearchipelago;
 
@@ -19,6 +20,7 @@ public class SavePatch
         
         SaveUtility.Save("AP_LastHandledItemIndex", Plugin.Client.LastHandledItemIndex, saveId, false);
         SaveUtility.Save("AP_ChumTearLocationsChecked", Plugin.Client.ChumTearLocationsChecked, saveId, false);
+        ApSaveChecker.AddApSave(saveId);
     }
 }
 

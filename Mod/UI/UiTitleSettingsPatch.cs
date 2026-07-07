@@ -12,7 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace com.thegamefire.sablearchipelago;
+namespace com.thegamefire.sablearchipelago.UI;
 
 [HarmonyPatch(typeof(TitleSettingsScreen), nameof(TitleScreen.OnOpen))]
 public static class CustomSettingsPanel

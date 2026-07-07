@@ -11,7 +11,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 
-namespace com.thegamefire.sablearchipelago;
+namespace com.thegamefire.sablearchipelago.UI;
 
 public class UiHelper
 {

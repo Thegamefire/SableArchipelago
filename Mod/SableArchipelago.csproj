@@ -14,6 +14,7 @@
     </RestoreAdditionalProjectSources>
     <RootNamespace>com.thegamefire.sablearchipelago</RootNamespace>
     <SablePath>..\..\..\SteamLibrary\steamapps\common\Sable</SablePath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,42 +29,59 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SablePath)\BepInEx\interop\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(SablePath)\BepInEx\interop\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="GameTemplateAssembly">
       <HintPath>$(SablePath)\BepInEx\interop\GameTemplateAssembly.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Common">
       <HintPath>$(SablePath)\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
       <HintPath>$(SablePath)\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>$(SablePath)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Opencoding.Console">
       <HintPath>$(SablePath)\BepInEx\interop\Opencoding.Console.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Unity.Addressables">
       <HintPath>$(SablePath)\BepInEx\interop\Unity.Addressables.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(SablePath)\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 
@@ -71,4 +89,14 @@
     <EmbeddedResource Include="Assets\APIcon.png" />
     <EmbeddedResource Include="Assets\Circle.png" />
   </ItemGroup>
+
+  <Target Name="CopyMod" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <Binaries Include="$(TargetPath)"/>
+      <Binaries Include="$(TargetDir)/$(TargetName).pdb"/>
+      <Binaries Include="$(TargetDir)/*.dll"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Binaries)" DestinationFolder="$(SablePath)/BepInEx/plugins/SableArchipelago/"/>
+  </Target>
 </Project>

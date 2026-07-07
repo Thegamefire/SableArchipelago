@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using CollectiblesBehaviour;
+using com.thegamefire.sablearchipelago.UI;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 using Items;
