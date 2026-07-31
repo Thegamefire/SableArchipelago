@@ -91,6 +91,8 @@ public class ApConnectionIndicator : MonoBehaviour
             UpdateConnectionState(ApConnectionState.Connecting);
             Plugin.Client.Connect();
         }
+
+        DebugHelper.Update();
     }
 
     private void UpdateConnectionState(ApConnectionState state)
@@ -111,6 +113,7 @@ public class LoadTitleScreenPatch
             return;
         Plugin.Log.LogInfo("Loaded Titlescreen");
         ApConnectionIndicator.Create();
+        DebugHelper.OnTitleScreenLoad();
         _loaded = true;
     }
 }

@@ -4,8 +4,20 @@ using UnityEngine;
 
 namespace com.thegamefire.sablearchipelago;
 
-public static class UtilityMappings
+public static class Utility
 {
+    private static GameObject _inventoryUtilityGO;
+
+    public static PlayerInventoryUtility GetPlayerInventoryUtility()
+    {
+        if (_inventoryUtilityGO == null)
+        {
+            _inventoryUtilityGO = new GameObject("PlayerInventoryUtility");
+            _inventoryUtilityGO.AddComponent<PlayerInventoryUtility>();
+        }
+        return _inventoryUtilityGO.AddComponent<PlayerInventoryUtility>();
+    }
+
     public static Dictionary<String, String> LoadChumDictionary()
     {
         return new Dictionary<string, string>()

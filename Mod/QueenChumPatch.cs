@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using HarmonyLib;
 using Items;
 using Quadtree.Ecology.Chums;
-using UnityEngine;
 
 namespace com.thegamefire.sablearchipelago;
 
@@ -30,8 +29,7 @@ static class StaminaManager
 
     static float CalculateMaxStamina()
     {
-        GameObject playerInventoryParent = new GameObject("PlayerInventoryUtilityParent");
-        PlayerInventoryUtility inventoryUtility = playerInventoryParent.AddComponent<PlayerInventoryUtility>();
+        var inventoryUtility = Utility.GetPlayerInventoryUtility();
         Item queenChumTears = SingletonAsset.Instance<ItemDatabase>().GetItemFromName("ChumTear");
         int tearCount = inventoryUtility.GetQuantityHeld(queenChumTears);
         tearCount = Math.Clamp(tearCount, 0, 6);

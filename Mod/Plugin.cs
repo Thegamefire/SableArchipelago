@@ -28,8 +28,8 @@ public class Plugin : BasePlugin
     internal static ConfigEntry<bool> ConfigApDeathlink;
     internal static ConfigEntry<bool> ConfigApDeathlinkIsFastTravelMode;
 
-    internal static Dictionary<string, string> ChumNameMap = UtilityMappings.LoadChumDictionary();
-    internal static HashSet<string> NonRandomizedItems = UtilityMappings.NonRandomizedItems();
+    internal static Dictionary<string, string> ChumNameMap = Utility.LoadChumDictionary();
+    internal static HashSet<string> NonRandomizedItems = Utility.NonRandomizedItems();
     
     internal static ArchipelagoClient Client;
 

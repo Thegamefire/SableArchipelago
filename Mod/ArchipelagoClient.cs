@@ -21,7 +21,7 @@ public class ArchipelagoClient
     private ArchipelagoSession _session;
     private DeathLinkService _deathLinkService;
     
-    public readonly Dictionary<string, string> ServerItemMap = UtilityMappings.LoadServerItemNameDict();
+    public readonly Dictionary<string, string> ServerItemMap = Utility.LoadServerItemNameDict();
     public int LastHandledItemIndex;
     public int ChumTearLocationsChecked;
 
@@ -207,7 +207,7 @@ public class ArchipelagoClient
         float closestRingDist = float.MaxValue;
         
         
-        foreach (Vector3 ringLoc in UtilityMappings.GetHicaricRingLocations().Keys)
+        foreach (Vector3 ringLoc in Utility.GetHicaricRingLocations().Keys)
         {
             float dist = ringLoc.DistAxisAligned(playerLoc);
             if (dist < closestRingDist)
@@ -217,7 +217,7 @@ public class ArchipelagoClient
             }
         }
         
-        SendLocation(UtilityMappings.GetHicaricRingLocations()[closestRingLoc]);
+        SendLocation(Utility.GetHicaricRingLocations()[closestRingLoc]);
     }
 }
 
