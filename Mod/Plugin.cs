@@ -51,6 +51,9 @@ public class Plugin : BasePlugin
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
      
         ClassInjector.RegisterTypeInIl2Cpp<ApConnectionIndicator>();
+        ClassInjector.RegisterTypeInIl2Cpp<AreaBlockerBehaviour>();
+        ClassInjector.RegisterTypeInIl2Cpp<ChatBox>();
+        // ClassInjector.RegisterTypeInIl2Cpp<ChatMessage>();
         
         Log.LogInfo("Loading config...");
         LoadConfig();

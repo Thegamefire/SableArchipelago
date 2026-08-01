@@ -113,7 +113,8 @@ public class ArchipelagoClient
             );
             UiHelper.ToShowPopUpQueue.Enqueue(popUp);
         }
-
+        
+        ChatBox.AddMessage(message.ToString());
         Plugin.Log.LogMessage("Archipelago: " + message);
     }
 

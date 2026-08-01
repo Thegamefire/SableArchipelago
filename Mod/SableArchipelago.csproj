@@ -75,6 +75,10 @@
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="UnityEngine.TerrainModule">
       <HintPath>$(SablePath)\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
       <Private>false</Private>
