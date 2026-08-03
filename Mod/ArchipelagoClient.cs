@@ -91,6 +91,7 @@ public class ArchipelagoClient
         // used to interact with the server and the returned `LoginSuccessful` contains some useful information about the
         // initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
         var loginSuccess = (LoginSuccessful)result;
+        ChatBox.AddMessage($"Connected to slot {loginSuccess.Slot}");
         ConnectionState = ApConnectionState.Connected;
     }
 
@@ -99,6 +100,7 @@ public class ArchipelagoClient
         if (!_session.Socket.Connected)
             return;
         _session.Socket.DisconnectAsync().Wait();
+        ChatBox.AddMessage("Disconnected from Archipelago Server");
         ConnectionState = ApConnectionState.Disconnected;
     }
 

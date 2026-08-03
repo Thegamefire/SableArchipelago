@@ -53,7 +53,7 @@ public class Plugin : BasePlugin
         ClassInjector.RegisterTypeInIl2Cpp<ApConnectionIndicator>();
         ClassInjector.RegisterTypeInIl2Cpp<AreaBlockerBehaviour>();
         ClassInjector.RegisterTypeInIl2Cpp<ChatBox>();
-        // ClassInjector.RegisterTypeInIl2Cpp<ChatMessage>();
+        ClassInjector.RegisterTypeInIl2Cpp<SUIT>();
         
         Log.LogInfo("Loading config...");
         LoadConfig();
@@ -181,7 +181,6 @@ public class Plugin : BasePlugin
                 SingletonAsset.Instance<TextureLoader>().inventoryImagesDictionary.Add("ArchipelagoIcon", UiHelper.GetArchipelagoIcon());
                 RegisteredCustomIcon = true;
             }
-            UiHelper.CheckShowPopUp();
 
             if (ReceivedItemsQueue.Count > 0)
             {

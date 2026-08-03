@@ -10,6 +10,8 @@ public static class DebugHelper
     [Conditional("DEBUG")]
     public static void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F3))
+            SUIT.ShowToastWithButton("Test Toast", "Image test");
         if (Input.GetKeyDown(KeyCode.F5))
             ChatBox.AddMessage("This is a long message that will not fit normally. Lorem ipsum dolor sit amet some other text that should fill the box completely...");
         if (Input.GetKeyDown(KeyCode.F8))
@@ -32,5 +34,6 @@ public static class DebugHelper
     [Conditional("DEBUG")]
     public static void OnTitleScreenLoad()
     {
+        Plugin.Log.LogInfo($"Title screen load here are getter name {nameof(QualityManager.Instance.CanAdjustQualitySettings)}");
     }
 }

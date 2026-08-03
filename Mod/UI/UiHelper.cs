@@ -19,42 +19,6 @@ public class UiHelper
     private static TMP_FontAsset _euclidRegularFont;
     public static readonly Queue<ApPopUp> ToShowPopUpQueue = new ();
 
-    public static void CheckShowPopUp()
-    {
-        var stateMachine = Resources.FindObjectsOfTypeAll<StateMachine>().FirstOrDefault((s) => s.name == "GameManager");
-        if (ToShowPopUpQueue.Count == 0 || stateMachine == null || stateMachine.CurrentStateType != Il2CppType.Of<GameplayState>())
-        {
-            if (ToShowPopUpQueue.Count != 0)
-            {
-            }
-
-            return;
-        }
-        ApPopUp popUp = ToShowPopUpQueue.Dequeue();
-        ShowPopUp(popUp);
-    }
-
-    private static void ShowPopUp(ApPopUp popUpData)
-    {
-        ItemDefinition fakeItemDef = new ItemDefinition();
-        fakeItemDef.Name = "ArchipelagoPopup";
-        fakeItemDef.Name_EN = popUpData.Title;
-        fakeItemDef.Description_EN = popUpData.Description;
-        fakeItemDef.Rarity = Rarity.Rare;
-        fakeItemDef.Icon = "ArchipelagoIcon";
-                
-        Item fakeItem = ScriptableObject.CreateInstance<Item>();
-        fakeItem.Initialise(fakeItemDef);
-                
-        var itemData = new ChestItemData { item = fakeItem, quantity = 1 };
-        var state = new PopUpState(ChestContents.Item, itemData, false);
-                
-        var stateMachine = Resources.FindObjectsOfTypeAll<StateMachine>().FirstOrDefault((s) => s.name == "GameManager");
-        if (stateMachine != null)
-        {
-            stateMachine.ForceNextState(state);
-        }
-    }
 
     public static Sprite GetArchipelagoIcon()
     {

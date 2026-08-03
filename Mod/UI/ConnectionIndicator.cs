@@ -112,6 +112,7 @@ public class LoadTitleScreenPatch
         if (_loaded)
             return;
         Plugin.Log.LogInfo("Loaded Titlescreen");
+        SUIT.Create();
         ApConnectionIndicator.Create();
         DebugHelper.OnTitleScreenLoad();
         _loaded = true;
