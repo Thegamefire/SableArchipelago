@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using GameTemplate;
 using HarmonyLib;
 using MapMagic;
 using TMPro;
@@ -11,6 +12,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace com.thegamefire.sablearchipelago.UI;
 
@@ -22,6 +24,11 @@ public static class CustomSettingsPanel
     static void Postfix(TitleSettingsScreen __instance)
     {
         if (_buttonAdded) return;
+        
+        
+        var stateMachine = Resources.FindObjectsOfTypeAll<StateMachine>().FirstOrDefault((s) => s.name == "GameManager");
+        if (stateMachine)
+            stateMachine.OnNewState += (Il2CppSystem.Action<Il2CppSystem.Type>)(_ => _buttonAdded = false);
 
         var allButtons = __instance.GetComponentsInChildren<UiSelectableButton>();
         var creditsButton = allButtons
